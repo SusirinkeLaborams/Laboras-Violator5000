@@ -100,6 +100,7 @@
     <ClCompile Include="Core\Settings.cpp" />
     <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="Graphics\D3D11GraphicsContext.cpp" />
+    <ClCompile Include="Graphics\Environment.cpp" />
     <ClCompile Include="Graphics\OrthographicCamera.cpp" />
     <ClCompile Include="Graphics\Tank.cpp" />
     <ClCompile Include="Utilities\Utilities.cpp" />
@@ -107,12 +108,15 @@
   <ItemGroup>
     <ClInclude Include="Core\GameLoop.h" />
     <ClInclude Include="Core\Input.h" />
+    <ClInclude Include="Core\NonCopyable.h" />
     <ClInclude Include="Core\Settings.h" />
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Graphics\D3D11GraphicsContext.h" />
+    <ClInclude Include="Graphics\Environment.h" />
     <ClInclude Include="Graphics\OrthographicCamera.h" />
     <ClInclude Include="Graphics\Tank.h" />
     <ClInclude Include="PrecompiledHeader.h" />
+    <ClInclude Include="RobotInterface\IncomingData.h" />
     <ClInclude Include="RobotInterface\ReceiverImpl.h" />
     <ClInclude Include="Utilities\DllFunctionInvoker.h" />
     <ClInclude Include="Utilities\Utilities.h" />

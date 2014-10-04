@@ -9,6 +9,8 @@ namespace Settings
 	extern const bool kFullscreen;
 
 	extern const float kCentimetersInWindowHeight;
+	extern const int kPathTracingBufferSize;
+	extern const float kPathTracingDecayTime;
 
 	extern const int kMultisampling;
 }

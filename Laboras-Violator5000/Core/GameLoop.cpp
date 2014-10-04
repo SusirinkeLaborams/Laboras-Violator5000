@@ -8,6 +8,11 @@ GameLoop::GameLoop() :
 	m_Input(Input::GetInstance()),
 	m_Camera(static_cast<float>(m_Window.GetWidth()) / static_cast<float>(m_Window.GetHeight()))
 {
+	OutputDebugStringW((std::to_wstring(reinterpret_cast<uint64_t>(this)) + L"\r\n").c_str());
+	m_Receiver.StartReceiving([this]()
+	{
+		OutputDebugStringW((std::to_wstring(reinterpret_cast<uint64_t>(this)) + L"\r\n").c_str());
+	});
 }
 
 GameLoop::~GameLoop()

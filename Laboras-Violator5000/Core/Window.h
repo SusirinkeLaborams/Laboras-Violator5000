@@ -1,8 +1,10 @@
 #pragma once
 
+#include "NonCopyable.h"
+
 class D3D11GraphicsContext;
 
-class Window
+class Window : NonCopyable
 {
 private:
 	HWND m_WindowHandle;

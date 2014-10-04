@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Core\NonCopyable.h"
+
 __declspec(align(16)) 
-class Tank
+class Tank : NonCopyable
 {
 private:
 	DirectX::XMMATRIX m_WorldMatrix;

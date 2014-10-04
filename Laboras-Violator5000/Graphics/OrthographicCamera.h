@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Core\NonCopyable.h"
+
 __declspec(align(16))
-class OrthographicCamera
+class OrthographicCamera : NonCopyable
 {
 private:
 	DirectX::XMMATRIX m_ViewMatrix;

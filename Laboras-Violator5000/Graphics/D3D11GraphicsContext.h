@@ -1,8 +1,9 @@
 #pragma once
 
-class Window;
+#include "Core\NonCopyable.h"
 
-class D3D11GraphicsContext
+class Window;
+class D3D11GraphicsContext : NonCopyable
 {
 private:
 	static D3D11GraphicsContext* s_Instance;

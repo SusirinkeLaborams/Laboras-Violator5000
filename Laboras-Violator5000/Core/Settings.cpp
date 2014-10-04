@@ -9,5 +9,7 @@ const int Settings::kHeight = 0;
 const bool Settings::kFullscreen = false;
 
 const float Settings::kCentimetersInWindowHeight = 500;
+const int Settings::kPathTracingBufferSize = 100000;
+const float Settings::kPathTracingDecayTime = 5.0f;
 
 const int Settings::kMultisampling = 4;
