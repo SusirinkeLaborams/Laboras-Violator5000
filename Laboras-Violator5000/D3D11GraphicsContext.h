@@ -1,5 +1,7 @@
 #pragma once
 
+class Window;
+
 class D3D11GraphicsContext
 {
 private:
@@ -12,14 +14,14 @@ private:
 	ComPtr<ID3D11RasterizerState> m_RasterizerState;
 	ComPtr<ID3D11BlendState> m_BlendState;
 
-	D3D_FEATURE_LEVEL CreateDeviceAndSwapChain(HWND hWnd, IDXGIFactory* dxgiFactory, IDXGIOutput* dxgiOutput, int width, int height, bool fullscreen);
+	D3D_FEATURE_LEVEL CreateDeviceAndSwapChain(IDXGIFactory* dxgiFactory, IDXGIOutput* dxgiOutput, const Window& window);
 	void CreateBackBufferResources(int width, int height);
 	void CreateRasterizerAndBlendStates(int width, int height);
 
 	static inline const D3D11GraphicsContext& GetInstance() { return *s_Instance; }
 
 public:
-	D3D11GraphicsContext(HWND hWnd, int width, int height, bool fullscreen);
+	D3D11GraphicsContext(const Window& window);
 	~D3D11GraphicsContext();
 
 	static inline ID3D11Device* GetDevice() { return GetInstance().m_Device.Get(); }

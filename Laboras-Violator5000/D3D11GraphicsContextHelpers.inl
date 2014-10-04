@@ -27,7 +27,7 @@ static inline void PrintAdapterInfo(IDXGIAdapter1* dxgiAdapter, D3D_FEATURE_LEVE
 	adapterInfoReport << "\tDescription: \t\t\t" << adapterDescription.Description << endl;
 	adapterInfoReport << "\tDedicated memory: \t\t" << adapterDescription.DedicatedVideoMemory / (1024 * 1024) << " MB" << endl;
 	adapterInfoReport << "\tShared system memory: \t" << adapterDescription.SharedSystemMemory / (1024 * 1024) << " MB" << endl;
-	adapterInfoReport << "\tD3D11GraphicsContext feature level:\t" << (featureLevel >> 12) << "." << ((featureLevel >> 8) & 0xF) << endl;
+	adapterInfoReport << "\tD3D11 feature level:\t" << (featureLevel >> 12) << "." << ((featureLevel >> 8) & 0xF) << endl;
 	adapterInfoReport << "---------------------------------------------------------------" << endl;
 
 	OutputDebugStringW(adapterInfoReport.str().c_str());
@@ -53,15 +53,15 @@ static inline HRESULT CreateDirect3D11Device(Args&&... args)
 	return DllFunctionInvoker<D3D11CreateDeviceFunc>::Invoke(L"D3D11.dll", "D3D11CreateDevice", L"This application requires DirectX 11 runtime installed to run.", std::forward<Args>(args)...);
 }
 
-static inline DXGI_MODE_DESC GetDisplayMode(IDXGIOutput* dxgiOutput, ID3D11Device* device, int width, int height, bool fullscreen)
+static inline DXGI_MODE_DESC GetDisplayMode(IDXGIOutput* dxgiOutput, ID3D11Device* device, const Window& window)
 {
 	DXGI_MODE_DESC desiredMode, displayMode;
 	ZeroMemory(&desiredMode, sizeof(desiredMode));
 
-	if (fullscreen)
+	if (window.IsFullscreen())
 	{
-		desiredMode.Width = width;
-		desiredMode.Height = height;
+		desiredMode.Width = window.GetWidth();
+		desiredMode.Height = window.GetHeight();
 	}
 
 	desiredMode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
@@ -69,11 +69,11 @@ static inline DXGI_MODE_DESC GetDisplayMode(IDXGIOutput* dxgiOutput, ID3D11Devic
 	auto result = dxgiOutput->FindClosestMatchingMode(&desiredMode, &displayMode, device);
 	Assert(result == S_OK);
 
-	if (!fullscreen)
-	{
-		displayMode.Width = width;
-		displayMode.Height = height;
-	}
+	// From MSDN:
+	// If the buffer width or the buffer height is zero, the sizes will be
+	// inferred from the output window size in the swap-chain description.
+	displayMode.Width = 0;
+	displayMode.Height = 0;
 
 	return displayMode;
 }

@@ -1,6 +1,7 @@
 #include "PrecompiledHeader.h"
 #include "D3D11GraphicsContext.h"
 #include "Settings.h"
+#include "Window.h"
 
 using namespace std;
 
@@ -8,7 +9,7 @@ D3D11GraphicsContext* D3D11GraphicsContext::s_Instance;
 
 #include "D3D11GraphicsContextHelpers.inl"
 
-D3D11GraphicsContext::D3D11GraphicsContext(HWND hWnd, int width, int height, bool fullscreen)
+D3D11GraphicsContext::D3D11GraphicsContext(const Window& window)
 {
 	Assert(s_Instance == nullptr);
 	s_Instance = this;
@@ -18,20 +19,30 @@ D3D11GraphicsContext::D3D11GraphicsContext(HWND hWnd, int width, int height, boo
 	ComPtr<IDXGIOutput> dxgiOutput;
 
 	GetDXGIFactoryAdapterOutput(dxgiFactory, dxgiAdapter, dxgiOutput);
-	auto featureLevel = CreateDeviceAndSwapChain(hWnd, dxgiFactory.Get(), dxgiOutput.Get(), width, height, fullscreen);
-	CreateBackBufferResources(width, height);
-	CreateRasterizerAndBlendStates(width, height);
+	auto featureLevel = CreateDeviceAndSwapChain(dxgiFactory.Get(), dxgiOutput.Get(), window);
+	CreateBackBufferResources(window.GetWidth(), window.GetHeight());
+	CreateRasterizerAndBlendStates(window.GetWidth(), window.GetHeight());
 
 	PrintAdapterInfo(dxgiAdapter.Get(), featureLevel);
 }
 
 D3D11GraphicsContext::~D3D11GraphicsContext()
 {
+	ComPtr<IDXGIOutput> dxgiOutput;
+	BOOL isFullscreen;
+
+	auto result = m_SwapChain->GetFullscreenState(&isFullscreen, &dxgiOutput);
+
+	if (isFullscreen)
+	{
+		m_SwapChain->SetFullscreenState(FALSE, dxgiOutput.Get());
+	}
+
 	Assert(s_Instance != nullptr);
 	s_Instance = nullptr;
 }
 
-D3D_FEATURE_LEVEL D3D11GraphicsContext::CreateDeviceAndSwapChain(HWND hWnd, IDXGIFactory* dxgiFactory, IDXGIOutput* dxgiOutput, int width, int height, bool fullscreen)
+D3D_FEATURE_LEVEL D3D11GraphicsContext::CreateDeviceAndSwapChain(IDXGIFactory* dxgiFactory, IDXGIOutput* dxgiOutput, const Window& window)
 {
 	HRESULT result;
 	DXGI_SWAP_CHAIN_DESC swapChainDescription;
@@ -56,8 +67,8 @@ D3D_FEATURE_LEVEL D3D11GraphicsContext::CreateDeviceAndSwapChain(HWND hWnd, IDXG
 		sizeof(featureLevels) / sizeof(D3D_FEATURE_LEVEL), D3D11_SDK_VERSION, &m_Device, &supportedFeatureLevel, &m_DeviceContext);
 	Assert(result == S_OK);
 
-	auto displayMode = GetDisplayMode(dxgiOutput, m_Device.Get(), width, height, fullscreen);
-	GetSwapChainDescription(hWnd, displayMode, fullscreen, swapChainDescription);
+	auto displayMode = GetDisplayMode(dxgiOutput, m_Device.Get(), window);
+	GetSwapChainDescription(window.GetWindowHandle(), displayMode, window.IsFullscreen(), swapChainDescription);
 	
 	result = dxgiFactory->CreateSwapChain(m_Device.Get(), &swapChainDescription, &m_SwapChain);
 	Assert(result == S_OK);
