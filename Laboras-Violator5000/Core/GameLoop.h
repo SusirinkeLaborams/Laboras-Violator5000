@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics\D3D11GraphicsContext.h"
+#include "Graphics\Environment.h"
 #include "Graphics\OrthographicCamera.h"
 #include "Graphics\Tank.h"
 #include "NonCopyable.h"
@@ -17,6 +18,7 @@ private:
 	Receiver m_Receiver;
 
 	OrthographicCamera m_Camera;
+	Environment m_Enviroment;
 	Tank m_Tank;
 
 	void UpdateAndDraw();

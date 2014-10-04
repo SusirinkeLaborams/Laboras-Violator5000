@@ -9,12 +9,13 @@ vector<uint8_t> Utilities::ReadFileToVector(const std::wstring& path)
 	Assert(fileHandle != INVALID_HANDLE_VALUE);
 
 	LARGE_INTEGER fileSize;
-	Assert(GetFileSizeEx(fileHandle, &fileSize) != FALSE);
+	auto result = GetFileSizeEx(fileHandle, &fileSize);
+	Assert(result != FALSE);
 
 	vector<uint8_t> fileBytes(static_cast<size_t>(fileSize.QuadPart));
 
 	DWORD numberOfBytesRead;
-	auto result = ReadFile(fileHandle, &fileBytes[0], static_cast<DWORD>(fileSize.QuadPart), &numberOfBytesRead, nullptr);
+	result = ReadFile(fileHandle, &fileBytes[0], static_cast<DWORD>(fileSize.QuadPart), &numberOfBytesRead, nullptr);
 	Assert(result != FALSE);
 	Assert(numberOfBytesRead == fileSize.QuadPart);
 

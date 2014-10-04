@@ -7,6 +7,8 @@ class D3D11GraphicsContext;
 class Window : NonCopyable
 {
 private:
+	static Window* s_Instance;
+
 	HWND m_WindowHandle;
 	HMODULE m_ProgramInstance;
 
@@ -37,4 +39,6 @@ public:
 	inline float GetAspectRatio() const { return static_cast<float>(m_Width) / static_cast<float>(m_Height); }
 	inline bool IsFullscreen() const { return m_Fullscreen; }
 	inline HWND GetWindowHandle() const { return m_WindowHandle; }
+
+	inline static const Window& GetInstance() { return *s_Instance; }
 };

@@ -3,6 +3,8 @@
 #include "Settings.h"
 #include "Window.h"
 
+Window* Window::s_Instance;
+
 Window::Window() :
 	m_WindowHandle(nullptr),
 	m_ProgramInstance(GetModuleHandle(nullptr)), 
@@ -10,10 +12,15 @@ Window::Window() :
 	m_Height(0),
 	m_Fullscreen(false)
 {
+	Assert(s_Instance == nullptr);
+	s_Instance = this;
 }
 
 Window::~Window()
 {
+	Assert(s_Instance == this);
+	s_Instance = nullptr;
+
 	DestroyWin32Window();
 }
 
