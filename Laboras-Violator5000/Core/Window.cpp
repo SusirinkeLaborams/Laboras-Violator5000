@@ -19,6 +19,10 @@ Window::~Window()
 
 void Window::Initialize(int width, int height, bool fullscreen)
 {
+	m_Width = width;
+	m_Height = height;
+	m_Fullscreen = fullscreen;
+
 	CreateWin32Window();
 	RegisterForRawInput();
 }
@@ -74,6 +78,7 @@ void Window::CreateWin32Window()
 	ShowWindow(m_WindowHandle, SW_SHOW);
 	SetForegroundWindow(m_WindowHandle);
 	SetFocus(m_WindowHandle);
+	ShowCursor(FALSE);
 }
 
 void Window::DestroyWin32Window()
@@ -95,8 +100,13 @@ void Window::RegisterForRawInput()
 
 	Rid[0].usUsagePage = 0x01;
 	Rid[0].usUsage = 0x02;					// Mouse
-	Rid[0].dwFlags = RIDEV_CAPTUREMOUSE | RIDEV_NOLEGACY;
+	Rid[0].dwFlags = 0;
 	Rid[0].hwndTarget = m_WindowHandle;
+
+	if (m_Fullscreen)
+	{
+		Rid[0].dwFlags &= RIDEV_CAPTUREMOUSE;
+	}
 
 	Rid[1].usUsagePage = 0x01;
 	Rid[1].usUsage = 0x06;					// Keyboard

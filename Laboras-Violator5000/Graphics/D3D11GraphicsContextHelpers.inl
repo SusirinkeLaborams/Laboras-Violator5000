@@ -53,7 +53,7 @@ static inline HRESULT CreateDirect3D11Device(Args&&... args)
 	return DllFunctionInvoker<D3D11CreateDeviceFunc>::Invoke(L"D3D11.dll", "D3D11CreateDevice", L"This application requires DirectX 11 runtime installed to run.", std::forward<Args>(args)...);
 }
 
-static inline DXGI_MODE_DESC GetDisplayMode(IDXGIOutput* dxgiOutput, ID3D11Device* device, int desiredWidth, int desiredHeight, bool fullscreen)
+static inline DXGI_MODE_DESC GetDisplayMode(IDXGIOutput* dxgiOutput, int desiredWidth, int desiredHeight, bool fullscreen)
 {
 	DXGI_MODE_DESC displayMode;
 	ZeroMemory(&displayMode, sizeof(displayMode));
@@ -102,7 +102,8 @@ static inline DXGI_MODE_DESC GetDisplayMode(IDXGIOutput* dxgiOutput, ID3D11Devic
 			return modes[bestMatch];
 		}
 	}
-	
+
+	displayMode.RefreshRate.Denominator = 1;
 	displayMode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	displayMode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
 	displayMode.Scaling = DXGI_MODE_SCALING_CENTERED;

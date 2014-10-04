@@ -19,9 +19,10 @@ D3D11GraphicsContext::D3D11GraphicsContext(Window& window, int requestedWidth, i
 	ComPtr<IDXGIOutput> dxgiOutput;
 
 	GetDXGIFactoryAdapterOutput(dxgiFactory, dxgiAdapter, dxgiOutput);
-	auto featureLevel = CreateDevice();	
-	auto displayMode = GetDisplayMode(dxgiOutput.Get(), m_Device.Get(), requestedWidth, requestedHeight, fullscreen);
+	auto displayMode = GetDisplayMode(dxgiOutput.Get(), requestedWidth, requestedHeight, fullscreen);
 	window.Initialize(displayMode.Width, displayMode.Height, fullscreen);
+
+	auto featureLevel = CreateDevice();
 	CreateSwapChain(window, dxgiFactory.Get(), displayMode);
 
 	CreateBackBufferResources(window.GetWidth(), window.GetHeight());
@@ -64,7 +65,7 @@ D3D_FEATURE_LEVEL D3D11GraphicsContext::CreateDevice()
 		D3D_FEATURE_LEVEL_9_1,
 	};
 
-#if DEBUG
+#if _DEBUG
 	deviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 	
