@@ -53,27 +53,61 @@ static inline HRESULT CreateDirect3D11Device(Args&&... args)
 	return DllFunctionInvoker<D3D11CreateDeviceFunc>::Invoke(L"D3D11.dll", "D3D11CreateDevice", L"This application requires DirectX 11 runtime installed to run.", std::forward<Args>(args)...);
 }
 
-static inline DXGI_MODE_DESC GetDisplayMode(IDXGIOutput* dxgiOutput, ID3D11Device* device, const Window& window)
+static inline DXGI_MODE_DESC GetDisplayMode(IDXGIOutput* dxgiOutput, ID3D11Device* device, int desiredWidth, int desiredHeight, bool fullscreen)
 {
-	DXGI_MODE_DESC desiredMode, displayMode;
-	ZeroMemory(&desiredMode, sizeof(desiredMode));
+	DXGI_MODE_DESC displayMode;
+	ZeroMemory(&displayMode, sizeof(displayMode));
 
-	if (window.IsFullscreen())
+	if (desiredWidth == 0)
 	{
-		desiredMode.Width = window.GetWidth();
-		desiredMode.Height = window.GetHeight();
+		desiredWidth = GetSystemMetrics(SM_CXSCREEN);
 	}
 
-	desiredMode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
+	if (desiredHeight == 0)
+	{
+		desiredHeight = GetSystemMetrics(SM_CYSCREEN);
+	}
 
-	auto result = dxgiOutput->FindClosestMatchingMode(&desiredMode, &displayMode, device);
-	Assert(result == S_OK);
+	if (fullscreen)
+	{
+		UINT modeCount = 0;
+		auto result = dxgiOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &modeCount, nullptr);
+		
+		if (result == S_OK)
+		{
+			std::unique_ptr<DXGI_MODE_DESC[]> modes(new DXGI_MODE_DESC[modeCount]);
+			result = dxgiOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &modeCount, modes.get());
+			Assert(result == S_OK);
 
-	// From MSDN:
-	// If the buffer width or the buffer height is zero, the sizes will be
-	// inferred from the output window size in the swap-chain description.
-	displayMode.Width = 0;
-	displayMode.Height = 0;
+			double maxRefreshRate = 0;
+			int bestMatch = 0;
+			
+			for (auto i = 1u; i < modeCount; i++)
+			{
+				if (modes[i].Width <= static_cast<UINT>(desiredWidth) && modes[i].Height <= static_cast<UINT>(desiredHeight))
+				{
+					if (modes[i].Width >= modes[bestMatch].Width && modes[i].Height >= modes[bestMatch].Height)
+					{
+						auto refreshRate = static_cast<double>(modes[i].RefreshRate.Numerator) / static_cast<double>(modes[i].RefreshRate.Denominator);
+
+						if (modes[i].Width > modes[bestMatch].Width || modes[i].Height > modes[bestMatch].Height || refreshRate > maxRefreshRate)
+						{
+							maxRefreshRate = refreshRate;
+							bestMatch = i;
+						}
+					}
+				}
+			}
+
+			return modes[bestMatch];
+		}
+	}
+	
+	displayMode.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	displayMode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
+	displayMode.Scaling = DXGI_MODE_SCALING_CENTERED;
+	displayMode.Width = desiredWidth;
+	displayMode.Height = desiredHeight;
 
 	return displayMode;
 }

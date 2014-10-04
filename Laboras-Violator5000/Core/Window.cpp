@@ -3,25 +3,24 @@
 #include "Settings.h"
 #include "Window.h"
 
-Window::Window(int width, int height, bool fullscreen) :
-	m_WindowHandle(nullptr), m_ProgramInstance(GetModuleHandle(nullptr)), m_Fullscreen(fullscreen)
+Window::Window() :
+	m_WindowHandle(nullptr),
+	m_ProgramInstance(GetModuleHandle(nullptr)), 
+	m_Width(0),
+	m_Height(0),
+	m_Fullscreen(false)
 {
-	if (width == 0 || height == 0)
-	{
-		width = GetSystemMetrics(SM_CXSCREEN);
-		height = GetSystemMetrics(SM_CYSCREEN);
-	}
-
-	m_Width = width;
-	m_Height = height;
-
-	CreateWin32Window();
-	RegisterForRawInput();
 }
 
 Window::~Window()
 {
 	DestroyWin32Window();
+}
+
+void Window::Initialize(int width, int height, bool fullscreen)
+{
+	CreateWin32Window();
+	RegisterForRawInput();
 }
 
 void Window::CreateWin32Window()

@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\GameLoop.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\Main.cpp" />
     <ClCompile Include="Core\PrecompiledHeader.cpp">
@@ -101,11 +102,12 @@
     <ClCompile Include="Graphics\D3D11GraphicsContext.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\GameLoop.h" />
     <ClInclude Include="Core\Input.h" />
-    <ClInclude Include="Core\PrecompiledHeader.h" />
     <ClInclude Include="Core\Settings.h" />
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Graphics\D3D11GraphicsContext.h" />
+    <ClInclude Include="PrecompiledHeader.h" />
     <ClInclude Include="Utilities\DllFunctionInvoker.h" />
   </ItemGroup>
   <ItemGroup>

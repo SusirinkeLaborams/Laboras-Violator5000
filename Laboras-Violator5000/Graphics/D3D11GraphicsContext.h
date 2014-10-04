@@ -14,14 +14,15 @@ private:
 	ComPtr<ID3D11RasterizerState> m_RasterizerState;
 	ComPtr<ID3D11BlendState> m_BlendState;
 
-	D3D_FEATURE_LEVEL CreateDeviceAndSwapChain(IDXGIFactory* dxgiFactory, IDXGIOutput* dxgiOutput, const Window& window);
+	D3D_FEATURE_LEVEL CreateDevice();
+	void CreateSwapChain(const Window& window, IDXGIFactory* dxgiFactory, const DXGI_MODE_DESC& displayMode);
 	void CreateBackBufferResources(int width, int height);
 	void CreateRasterizerAndBlendStates(int width, int height);
 
 	static inline const D3D11GraphicsContext& GetInstance() { return *s_Instance; }
 
 public:
-	D3D11GraphicsContext(const Window& window);
+	D3D11GraphicsContext(Window& window, int requestedWidth = 0, int requestedHeight = 0, bool fullscreen = false);
 	~D3D11GraphicsContext();
 
 	static inline ID3D11Device* GetDevice() { return GetInstance().m_Device.Get(); }

@@ -9,7 +9,7 @@ D3D11GraphicsContext* D3D11GraphicsContext::s_Instance;
 
 #include "D3D11GraphicsContextHelpers.inl"
 
-D3D11GraphicsContext::D3D11GraphicsContext(const Window& window)
+D3D11GraphicsContext::D3D11GraphicsContext(Window& window, int requestedWidth, int requestedHeight, bool fullscreen)
 {
 	Assert(s_Instance == nullptr);
 	s_Instance = this;
@@ -19,11 +19,18 @@ D3D11GraphicsContext::D3D11GraphicsContext(const Window& window)
 	ComPtr<IDXGIOutput> dxgiOutput;
 
 	GetDXGIFactoryAdapterOutput(dxgiFactory, dxgiAdapter, dxgiOutput);
-	auto featureLevel = CreateDeviceAndSwapChain(dxgiFactory.Get(), dxgiOutput.Get(), window);
+	auto featureLevel = CreateDevice();	
+	auto displayMode = GetDisplayMode(dxgiOutput.Get(), m_Device.Get(), requestedWidth, requestedHeight, fullscreen);
+	window.Initialize(displayMode.Width, displayMode.Height, fullscreen);
+	CreateSwapChain(window, dxgiFactory.Get(), displayMode);
+
 	CreateBackBufferResources(window.GetWidth(), window.GetHeight());
 	CreateRasterizerAndBlendStates(window.GetWidth(), window.GetHeight());
 
-	PrintAdapterInfo(dxgiAdapter.Get(), featureLevel);
+	if (IsDebuggerPresent())
+	{
+		PrintAdapterInfo(dxgiAdapter.Get(), featureLevel);
+	}
 }
 
 D3D11GraphicsContext::~D3D11GraphicsContext()
@@ -42,10 +49,8 @@ D3D11GraphicsContext::~D3D11GraphicsContext()
 	s_Instance = nullptr;
 }
 
-D3D_FEATURE_LEVEL D3D11GraphicsContext::CreateDeviceAndSwapChain(IDXGIFactory* dxgiFactory, IDXGIOutput* dxgiOutput, const Window& window)
+D3D_FEATURE_LEVEL D3D11GraphicsContext::CreateDevice()
 {
-	HRESULT result;
-	DXGI_SWAP_CHAIN_DESC swapChainDescription;
 	UINT deviceFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 	D3D_FEATURE_LEVEL supportedFeatureLevel;
 	D3D_FEATURE_LEVEL featureLevels[] =
@@ -63,17 +68,20 @@ D3D_FEATURE_LEVEL D3D11GraphicsContext::CreateDeviceAndSwapChain(IDXGIFactory* d
 	deviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 	
-	result = CreateDirect3D11Device(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, deviceFlags, featureLevels, 
+	auto result = CreateDirect3D11Device(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, deviceFlags, featureLevels, 
 		sizeof(featureLevels) / sizeof(D3D_FEATURE_LEVEL), D3D11_SDK_VERSION, &m_Device, &supportedFeatureLevel, &m_DeviceContext);
 	Assert(result == S_OK);
 
-	auto displayMode = GetDisplayMode(dxgiOutput, m_Device.Get(), window);
-	GetSwapChainDescription(window.GetWindowHandle(), displayMode, window.IsFullscreen(), swapChainDescription);
-	
-	result = dxgiFactory->CreateSwapChain(m_Device.Get(), &swapChainDescription, &m_SwapChain);
-	Assert(result == S_OK);
-
 	return supportedFeatureLevel;
+}
+
+void D3D11GraphicsContext::CreateSwapChain(const Window& window, IDXGIFactory* dxgiFactory, const DXGI_MODE_DESC& displayMode)
+{
+	DXGI_SWAP_CHAIN_DESC swapChainDescription;
+	GetSwapChainDescription(window.GetWindowHandle(), displayMode, window.IsFullscreen(), swapChainDescription);
+
+	auto result = dxgiFactory->CreateSwapChain(m_Device.Get(), &swapChainDescription, &m_SwapChain);
+	Assert(result == S_OK);
 }
 
 void D3D11GraphicsContext::CreateBackBufferResources(int width, int height)

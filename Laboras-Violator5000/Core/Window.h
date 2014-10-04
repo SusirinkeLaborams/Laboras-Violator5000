@@ -1,5 +1,7 @@
 #pragma once
 
+class D3D11GraphicsContext;
+
 class Window
 {
 private:
@@ -16,13 +18,18 @@ private:
 	void RegisterForRawInput();
 	LRESULT HandleRawInput(WPARAM wParam, LPARAM lParam) const;
 
+	void Initialize(int width, int height, bool fullscreen);
+
+	friend class D3D11GraphicsContext;
+
 public:
-	Window(int width = 0, int height = 0, bool fullscreen = false);
+	Window();
 	~Window();
 
 	void DispatchMessages() const;
 	LRESULT HandleMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
 
+	inline bool IsCreated() const { return m_WindowHandle != nullptr; }
 	inline int GetWidth() const { return m_Width; }
 	inline int GetHeight() const { return m_Height; }
 	inline float GetAspectRatio() const { return static_cast<float>(m_Width) / static_cast<float>(m_Height); }

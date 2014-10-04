@@ -8,8 +8,8 @@ int main()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
 #endif
 
-	Window w(0, 0, false);
-	D3D11GraphicsContext gfxContext(w);
+	Window w;
+	D3D11GraphicsContext gfxContext(w, 0, 0, true);
 
 	return 0;
 }

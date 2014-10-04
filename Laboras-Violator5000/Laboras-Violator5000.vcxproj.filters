@@ -33,6 +33,9 @@
     <ClCompile Include="Core\Window.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\GameLoop.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\D3D11GraphicsContextHelpers.inl">
@@ -50,10 +53,13 @@
     <ClInclude Include="Core\Input.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\PrecompiledHeader.h">
+    <ClInclude Include="Core\Settings.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Settings.h">
+    <ClInclude Include="Core\GameLoop.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PrecompiledHeader.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
