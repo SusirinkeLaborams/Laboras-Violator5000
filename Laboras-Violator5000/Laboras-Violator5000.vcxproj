@@ -113,6 +113,7 @@
     <ClInclude Include="Graphics\OrthographicCamera.h" />
     <ClInclude Include="Graphics\Tank.h" />
     <ClInclude Include="PrecompiledHeader.h" />
+    <ClInclude Include="RobotController\ReceiverImpl.h" />
     <ClInclude Include="Utilities\DllFunctionInvoker.h" />
     <ClInclude Include="Utilities\Utilities.h" />
   </ItemGroup>

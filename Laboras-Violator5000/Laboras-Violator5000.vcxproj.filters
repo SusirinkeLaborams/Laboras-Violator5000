@@ -83,6 +83,9 @@
     <ClInclude Include="Utilities\Utilities.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="RobotController\ReceiverImpl.h">
+      <Filter>RobotController</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\TankVertexShader.hlsl">
