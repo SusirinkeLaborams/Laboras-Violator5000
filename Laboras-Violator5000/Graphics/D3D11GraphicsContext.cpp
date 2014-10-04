@@ -1,7 +1,7 @@
 #include "PrecompiledHeader.h"
+#include "Core\Settings.h"
+#include "Core\Window.h"
 #include "D3D11GraphicsContext.h"
-#include "Settings.h"
-#include "Window.h"
 
 using namespace std;
 

@@ -53,6 +53,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -72,6 +73,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -84,26 +86,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="D3D11GraphicsContext.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="PrecompiledHeader.cpp">
+    <ClCompile Include="Core\Input.cpp" />
+    <ClCompile Include="Core\Main.cpp" />
+    <ClCompile Include="Core\PrecompiledHeader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Settings.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Core\Settings.cpp" />
+    <ClCompile Include="Core\Window.cpp" />
+    <ClCompile Include="Graphics\D3D11GraphicsContext.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D3D11GraphicsContext.h" />
-    <ClInclude Include="DllFunctionInvoker.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="PrecompiledHeader.h" />
-    <ClInclude Include="Settings.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="Core\Input.h" />
+    <ClInclude Include="Core\PrecompiledHeader.h" />
+    <ClInclude Include="Core\Settings.h" />
+    <ClInclude Include="Core\Window.h" />
+    <ClInclude Include="Graphics\D3D11GraphicsContext.h" />
+    <ClInclude Include="Utilities\DllFunctionInvoker.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D3D11GraphicsContextHelpers.inl">
+    <ClInclude Include="Graphics\D3D11GraphicsContextHelpers.inl">
       <FileType>CppCode</FileType>
     </ClInclude>
   </ItemGroup>

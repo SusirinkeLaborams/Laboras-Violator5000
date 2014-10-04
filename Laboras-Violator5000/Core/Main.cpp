@@ -1,5 +1,5 @@
 #include "PrecompiledHeader.h"
-#include "D3D11GraphicsContext.h"
+#include "Graphics\D3D11GraphicsContext.h"
 #include "Window.h"
 
 int main()

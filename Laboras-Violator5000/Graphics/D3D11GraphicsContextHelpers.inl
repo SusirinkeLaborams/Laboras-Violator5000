@@ -12,7 +12,7 @@ typedef HRESULT (WINAPI *D3D11CreateDeviceFunc)(
 
 typedef HRESULT (WINAPI *CreateDXGIFactory1Func)(REFIID riid, _Out_ void **ppFactory);
 
-#include "DllFunctionInvoker.h"
+#include "Utilities\DllFunctionInvoker.h"
 
 static inline void PrintAdapterInfo(IDXGIAdapter1* dxgiAdapter, D3D_FEATURE_LEVEL featureLevel)
 {
