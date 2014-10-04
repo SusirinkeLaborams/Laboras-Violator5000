@@ -7,6 +7,7 @@ OrthographicCamera::OrthographicCamera(float aspectRatio, const DirectX::XMFLOAT
 	m_Rotation(rotation),
 	m_DirtyViewMatrix(true)
 {
+	RecalculateProjectionMatrix(aspectRatio);
 }
 
 OrthographicCamera::~OrthographicCamera()
@@ -30,9 +31,7 @@ void OrthographicCamera::RecalculateViewMatrix()
 void OrthographicCamera::RecalculateProjectionMatrix(float aspectRatio)
 {
 	DirectX::XMMATRIX orthoMatrix = DirectX::XMMatrixOrthographicRH(aspectRatio * Settings::kCentimetersInWindowHeight, Settings::kCentimetersInWindowHeight, 0.1f, 1000.0f);
-	DirectX::XMMATRIX flipYMatrix = DirectX::XMMatrixScaling(1.0f, -1.0f, 1.0f);
-
-	m_ProjectionMatrix = DirectX::XMMatrixTranspose(flipYMatrix * orthoMatrix);
+	m_ProjectionMatrix = DirectX::XMMatrixTranspose(orthoMatrix);
 }
 
 void OrthographicCamera::RecalculateViewProjectionMatrix()

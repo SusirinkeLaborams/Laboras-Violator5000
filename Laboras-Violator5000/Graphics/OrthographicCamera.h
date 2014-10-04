@@ -17,8 +17,8 @@ private:
 	void RecalculateViewProjectionMatrix();
 
 public:
-	OrthographicCamera(float aspectRatio, const DirectX::XMFLOAT3& position = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 
-					   const DirectX::XMFLOAT3& rotation = DirectX::XMFLOAT3(DirectX::XM_PI / 2.0f, 0.0f, 0.0f));
+	OrthographicCamera(float aspectRatio, const DirectX::XMFLOAT3& position = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), 
+					   const DirectX::XMFLOAT3& rotation = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	~OrthographicCamera();
 
 	const DirectX::XMMATRIX& GetViewProjectionMatrix();

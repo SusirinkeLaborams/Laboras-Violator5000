@@ -13,6 +13,9 @@
     <Filter Include="RobotController">
       <UniqueIdentifier>{bf84c955-878b-4fba-a35b-81bb1e05939a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{02823273-93f0-443f-9887-3537d078bfd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\D3D11GraphicsContext.cpp">
@@ -41,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="Graphics\Tank.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Utilities.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,5 +80,16 @@
     <ClInclude Include="Graphics\Tank.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\Utilities.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\TankVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\TankPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
