@@ -36,6 +36,12 @@
     <ClCompile Include="Core\GameLoop.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\OrthographicCamera.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Tank.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\D3D11GraphicsContextHelpers.inl">
@@ -61,6 +67,12 @@
     </ClInclude>
     <ClInclude Include="PrecompiledHeader.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\OrthographicCamera.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Tank.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

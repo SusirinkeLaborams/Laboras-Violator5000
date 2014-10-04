@@ -1,11 +1,13 @@
 #include "PrecompiledHeader.h"
 #include "GameLoop.h"
+#include "Graphics\RenderParameters.h"
 #include "Input.h"
 #include "Settings.h"
 
 GameLoop::GameLoop() :
 	m_GraphicsContext(m_Window, Settings::kWidth, Settings::kHeight, Settings::kFullscreen),
-	m_Input(Input::GetInstance())
+	m_Input(Input::GetInstance()),
+	m_Camera(static_cast<float>(m_Window.GetWidth()) / static_cast<float>(m_Window.GetHeight()))
 {
 }
 
@@ -44,5 +46,9 @@ void GameLoop::Render()
 {
 	m_GraphicsContext.SetBackBufferAsRenderTarget();
 	m_GraphicsContext.Clear();
+
+	const auto& viewMatrix = m_Camera.GetViewProjectionMatrix();
+	m_Tank.Render(viewMatrix);
+
 	m_GraphicsContext.Present();
 }

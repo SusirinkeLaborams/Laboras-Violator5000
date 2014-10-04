@@ -8,4 +8,6 @@ const int Settings::kWidth = 0;
 const int Settings::kHeight = 0;
 const bool Settings::kFullscreen = false;
 
+const float Settings::kCentimetersInWindowHeight = 250;
+
 const int Settings::kMultisampling = 4;

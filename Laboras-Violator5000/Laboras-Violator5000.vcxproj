@@ -100,6 +100,8 @@
     <ClCompile Include="Core\Settings.cpp" />
     <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="Graphics\D3D11GraphicsContext.cpp" />
+    <ClCompile Include="Graphics\OrthographicCamera.cpp" />
+    <ClCompile Include="Graphics\Tank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\GameLoop.h" />
@@ -107,6 +109,8 @@
     <ClInclude Include="Core\Settings.h" />
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Graphics\D3D11GraphicsContext.h" />
+    <ClInclude Include="Graphics\OrthographicCamera.h" />
+    <ClInclude Include="Graphics\Tank.h" />
     <ClInclude Include="PrecompiledHeader.h" />
     <ClInclude Include="Utilities\DllFunctionInvoker.h" />
   </ItemGroup>
