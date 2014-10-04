@@ -10,11 +10,11 @@
     <Filter Include="Utilities">
       <UniqueIdentifier>{39ea409d-16f1-43ea-b55a-490f6cb0dcae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RobotController">
-      <UniqueIdentifier>{bf84c955-878b-4fba-a35b-81bb1e05939a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{02823273-93f0-443f-9887-3537d078bfd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RobotInterface">
+      <UniqueIdentifier>{bf84c955-878b-4fba-a35b-81bb1e05939a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -83,8 +83,8 @@
     <ClInclude Include="Utilities\Utilities.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="RobotController\ReceiverImpl.h">
-      <Filter>RobotController</Filter>
+    <ClInclude Include="RobotInterface\ReceiverImpl.h">
+      <Filter>RobotInterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
