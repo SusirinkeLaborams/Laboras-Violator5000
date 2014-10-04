@@ -2,7 +2,10 @@
 #include "Tank.h"
 
 
-Tank::Tank()
+Tank::Tank() :
+	m_Position(0.0f, 0.0f, 0.0f),
+	m_Rotation(0.0f, 0.0f, 0.0f),
+	m_DirtyWorldMatrix(true)
 {
 }
 
@@ -13,11 +16,9 @@ Tank::~Tank()
 
 void Tank::RecalculateWorldMatrix()
 {
-	DirectX::XMMATRIX position = DirectX::XMMatrixTranslation(m_Parameters.position.x, m_Parameters.position.y, m_Parameters.position.z);
-	DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(m_Parameters.rotation.x, m_Parameters.rotation.y, m_Parameters.rotation.z);
-	DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(m_Parameters.scale.x, m_Parameters.scale.y, m_Parameters.scale.z);
-
-	DirectX::XMMATRIX worldMatrix = scale * rotation * position;
+	DirectX::XMMATRIX position = DirectX::XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
+	DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	DirectX::XMMATRIX worldMatrix = rotation * position;
 
 	m_WorldMatrix = DirectX::XMMatrixTranspose(worldMatrix);
 	m_DirtyWorldMatrix = false;

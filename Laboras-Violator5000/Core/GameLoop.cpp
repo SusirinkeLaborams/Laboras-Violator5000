@@ -1,6 +1,5 @@
 #include "PrecompiledHeader.h"
 #include "GameLoop.h"
-#include "Graphics\RenderParameters.h"
 #include "Input.h"
 #include "Settings.h"
 
