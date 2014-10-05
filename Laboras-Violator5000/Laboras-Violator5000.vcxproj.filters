@@ -98,6 +98,12 @@
     <ClInclude Include="RobotInterface\IncomingData.h">
       <Filter>RobotInterface</Filter>
     </ClInclude>
+    <ClInclude Include="RobotInterface\RobotBase.h">
+      <Filter>RobotInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotInterface\MockRobot.h">
+      <Filter>RobotInterface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\TankVertexShader.hlsl">

@@ -6,7 +6,12 @@ class ReceiverImpl
 {
 	std::thread loopThread;
 	volatile bool running;
+	const Robot &robot;
 public:
+	ReceiverImpl(const Robot &robot);
+	ReceiverImpl(const ReceiverImpl&) = delete;
+	ReceiverImpl(ReceiverImpl&&) = delete;
+
 	template<typename Callback>
 	void StartReceiving(Callback callback);
 	void StopReceiving();
@@ -15,6 +20,12 @@ private:
 	template<typename Callback>
 	void StartInternal(Callback callback);
 };
+
+template<typename Robot>
+ReceiverImpl<Robot>::ReceiverImpl(const Robot &robot)
+	:robot(robot)
+{
+}
 
 //not thread safe
 template<typename Robot>
@@ -43,5 +54,3 @@ void ReceiverImpl<Robot>::StopReceiving()
 {
 	running = false;
 }
-
-using Receiver = ReceiverImpl<int>;//dummy param

@@ -5,7 +5,7 @@
 #include "Graphics\OrthographicCamera.h"
 #include "Graphics\Tank.h"
 #include "NonCopyable.h"
-#include "RobotInterface\ReceiverImpl.h"
+#include "RobotInterface\MockRobot.h"
 #include "Window.h"
 
 class Input;
@@ -15,7 +15,7 @@ private:
 	Window m_Window;
 	D3D11GraphicsContext m_GraphicsContext;
 	Input& m_Input;
-	Receiver m_Receiver;
+	MockRobot m_Robot;
 
 	OrthographicCamera m_Camera;
 	Environment m_Enviroment;
