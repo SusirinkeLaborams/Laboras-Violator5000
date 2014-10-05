@@ -8,10 +8,15 @@ GameLoop::GameLoop() :
 	m_Input(Input::GetInstance()),
 	m_Camera(static_cast<float>(m_Window.GetWidth()) / static_cast<float>(m_Window.GetHeight()))
 {
+	m_Robot.GetReceiver().StartReceiving([this](const IncomingData& data)
+	{
+		ReceiveRobotData(data);
+	});
 }
 
 GameLoop::~GameLoop()
 {
+	m_Robot.GetReceiver().StopReceiving();
 }
 
 void GameLoop::Run()
@@ -51,4 +56,8 @@ void GameLoop::Render()
 	m_Tank.Render(viewMatrix);
 
 	m_GraphicsContext.Present();
+}
+
+void GameLoop::ReceiveRobotData(const IncomingData& data)
+{
 }

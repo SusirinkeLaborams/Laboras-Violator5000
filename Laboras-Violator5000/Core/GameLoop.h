@@ -24,6 +24,7 @@ private:
 	void UpdateAndDraw();
 	void Update();
 	void Render();
+	void ReceiveRobotData(const IncomingData& data);
 
 public:
 	GameLoop();
