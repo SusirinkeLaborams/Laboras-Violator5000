@@ -12,6 +12,8 @@ public:
 	ReceiverImpl(const ReceiverImpl&) = delete;
 	ReceiverImpl(ReceiverImpl&&) = delete;
 
+	~ReceiverImpl();
+
 	template<typename Callback>
 	void StartReceiving(Callback callback);
 	void StopReceiving();
@@ -23,8 +25,14 @@ private:
 
 template<typename Robot>
 ReceiverImpl<Robot>::ReceiverImpl(const Robot &robot)
-	:robot(robot)
+	:robot(robot), running(false)
 {
+}
+
+template<typename Robot>
+ReceiverImpl<Robot>::~ReceiverImpl()
+{
+	StopReceiving();
 }
 
 //not thread safe
@@ -36,7 +44,7 @@ void ReceiverImpl<Robot>::StartReceiving(Callback callback)
 	Assert(!(loopThread.joinable() || running));
 	running = true;
 
-	loopThread = std::thread(std::bind(&ReceiverImpl::StartInternal, this, callback));
+	loopThread = std::thread(std::bind(&ReceiverImpl<Robot>::StartInternal<Callback>, this, callback));
 }
 
 template<typename Robot>
@@ -53,4 +61,6 @@ template<typename Robot>
 void ReceiverImpl<Robot>::StopReceiving()
 {
 	running = false;
+	if (loopThread.joinable())
+		loopThread.join();
 }
