@@ -3,7 +3,7 @@
 #include "ReceiverImpl.h"
 
 template<typename Robot>
-class RobotBase
+class RobotBase : NonCopyable
 {
 public:
 	using Receiver = ReceiverImpl<Robot>;

@@ -1,9 +1,12 @@
 #pragma once
 #include "RobotBase.h"
 #include "ReceiverImpl.h"
+#include "IncomingData.h"
 
 class MockRobot : public RobotBase<MockRobot>
 {
+	DX::XMFLOAT2 position;
 public:
-	MockRobot() :RobotBase(*this){}
+	MockRobot();
+	IncomingData GetData();
 };

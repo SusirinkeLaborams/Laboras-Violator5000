@@ -1,15 +1,15 @@
 #pragma once
 #include "PrecompiledHeader.h"
+#include "Core\NonCopyable.h"
 
 template<typename Robot>
-class ReceiverImpl
+class ReceiverImpl : NonCopyable
 {
 	std::thread loopThread;
 	volatile bool running;
 	const Robot &robot;
 public:
 	ReceiverImpl(const Robot &robot);
-	ReceiverImpl(const ReceiverImpl&) = delete;
 	ReceiverImpl(ReceiverImpl&&) = delete;
 
 	~ReceiverImpl();

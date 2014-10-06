@@ -1,10 +1,15 @@
 #pragma once
 
+namespace DX
+{
+	using namespace DirectX;
+}
+
 struct IncomingData
 {
 public:
 	static const int kSensorCount = 4;
 
-	DirectX::XMFLOAT2 robotPosition;
-	DirectX::XMFLOAT2 data[kSensorCount];
+	DX::XMFLOAT2 robotPosition;
+	DX::XMFLOAT2 data[kSensorCount];
 };

@@ -103,6 +103,7 @@
     <ClCompile Include="Graphics\Environment.cpp" />
     <ClCompile Include="Graphics\OrthographicCamera.cpp" />
     <ClCompile Include="Graphics\Tank.cpp" />
+    <ClCompile Include="RobotInterface\MockRobot.cpp" />
     <ClCompile Include="Utilities\Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
