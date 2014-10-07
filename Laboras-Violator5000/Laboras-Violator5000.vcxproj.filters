@@ -54,6 +54,9 @@
     <ClCompile Include="RobotInterface\MockRobot.cpp">
       <Filter>RobotInterface</Filter>
     </ClCompile>
+    <ClCompile Include="RobotInterface\Map.cpp">
+      <Filter>RobotInterface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\D3D11GraphicsContextHelpers.inl">
@@ -105,6 +108,9 @@
       <Filter>RobotInterface</Filter>
     </ClInclude>
     <ClInclude Include="RobotInterface\MockRobot.h">
+      <Filter>RobotInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotInterface\Map.h">
       <Filter>RobotInterface</Filter>
     </ClInclude>
   </ItemGroup>

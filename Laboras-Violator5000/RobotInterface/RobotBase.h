@@ -2,12 +2,18 @@
 #include "IncomingData.h"
 #include "ReceiverImpl.h"
 
+using int16 = short;
+using uint8 = byte;
+using int8 = char;
+
 template<typename Robot>
 class RobotBase : NonCopyable
 {
+	//types
 public:
 	using Receiver = ReceiverImpl<Robot>;
 
+	//fields
 private:
 	Receiver receiver;
 
@@ -24,6 +30,6 @@ typename RobotBase<Robot>::Receiver& RobotBase<Robot>::GetReceiver()
 
 template<typename Robot>
 RobotBase<Robot>::RobotBase(const Robot &robot)
-	:receiver(Receiver(robot))
+	:receiver(robot)
 {
 }

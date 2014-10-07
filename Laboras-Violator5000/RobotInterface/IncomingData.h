@@ -11,5 +11,6 @@ public:
 	static const int kSensorCount = 4;
 
 	DX::XMFLOAT2 robotPosition;
+	DX::XMFLOAT2 robotDirection;
 	DX::XMFLOAT2 data[kSensorCount];
 };

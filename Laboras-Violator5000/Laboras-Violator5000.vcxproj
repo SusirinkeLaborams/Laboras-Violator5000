@@ -103,6 +103,7 @@
     <ClCompile Include="Graphics\Environment.cpp" />
     <ClCompile Include="Graphics\OrthographicCamera.cpp" />
     <ClCompile Include="Graphics\Tank.cpp" />
+    <ClCompile Include="RobotInterface\Map.cpp" />
     <ClCompile Include="RobotInterface\MockRobot.cpp" />
     <ClCompile Include="Utilities\Utilities.cpp" />
   </ItemGroup>
@@ -118,6 +119,7 @@
     <ClInclude Include="Graphics\Tank.h" />
     <ClInclude Include="PrecompiledHeader.h" />
     <ClInclude Include="RobotInterface\IncomingData.h" />
+    <ClInclude Include="RobotInterface\Map.h" />
     <ClInclude Include="RobotInterface\MockRobot.h" />
     <ClInclude Include="RobotInterface\ReceiverImpl.h" />
     <ClInclude Include="RobotInterface\RobotBase.h" />
