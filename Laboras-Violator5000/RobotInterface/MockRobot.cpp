@@ -65,3 +65,9 @@ void MockRobot::Update()
 
 	time = now;
 }
+
+
+void MockRobot::SetDirection(DX::XMFLOAT2 dir)
+{
+
+}

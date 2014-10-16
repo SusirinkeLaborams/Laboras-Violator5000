@@ -9,7 +9,31 @@ void Map::Add(Line line)
 
 bool Map::GetCollision(const Line &line, DX::XMFLOAT2 &point)
 {
-	return false;
+	bool found = false;
+	DX::XMFLOAT2 tmpPoint;
+	float distance;
+	for (auto l : lines)
+	{
+		if (GetCollision(l, line, tmpPoint))
+		{
+			if (!found)
+			{
+				distance = sqrt(pow(tmpPoint.x - line.Start.x, 2) + pow(tmpPoint.y - line.Start.y, 2));
+				point = tmpPoint;
+				found = true;
+			}
+			else
+			{ 
+				float tmpDistance = sqrt(pow(tmpPoint.x - line.Start.x, 2) + pow(tmpPoint.y - line.Start.y, 2));
+				if (tmpDistance < distance)
+				{
+					distance = tmpDistance;
+					point = tmpPoint;
+				}
+			}
+		}
+	}
+	return found;
 }
 
 bool Map::GetCollision(const Line &first, const Line &second, DX::XMFLOAT2 &point)

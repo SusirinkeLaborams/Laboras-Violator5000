@@ -35,4 +35,5 @@ protected:
 public:
 	MockRobot();
 	IncomingData GetData();
+	void SetDirection(DX::XMFLOAT2 dir);
 };
