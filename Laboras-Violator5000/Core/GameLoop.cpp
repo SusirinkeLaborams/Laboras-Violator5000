@@ -6,7 +6,8 @@
 GameLoop::GameLoop() :
 	m_GraphicsContext(m_Window, Settings::kWidth, Settings::kHeight, Settings::kFullscreen),
 	m_Input(Input::GetInstance()),
-	m_Camera(static_cast<float>(m_Window.GetWidth()) / static_cast<float>(m_Window.GetHeight()))
+	m_Camera(static_cast<float>(m_Window.GetWidth()) / static_cast<float>(m_Window.GetHeight())),
+	m_Robot(Map::CreateSomeMap())
 {
 	m_Robot.GetReceiver().StartReceiving([this](const IncomingData& data)
 	{

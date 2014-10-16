@@ -7,10 +7,10 @@ void Map::Add(Line line)
 	lines.push_back(line);
 }
 
-bool Map::GetCollision(const Line &line, DX::XMFLOAT2 &point)
+DX::XMFLOAT2 Map::GetCollision(const Line &line)
 {
 	bool found = false;
-	DX::XMFLOAT2 tmpPoint;
+	DX::XMFLOAT2 tmpPoint, point;
 	float distance;
 	for (auto l : lines)
 	{
@@ -33,7 +33,7 @@ bool Map::GetCollision(const Line &line, DX::XMFLOAT2 &point)
 			}
 		}
 	}
-	return found;
+	return found ? point : line.End;
 }
 
 bool Map::GetCollision(const Line &first, const Line &second, DX::XMFLOAT2 &point)
@@ -97,4 +97,12 @@ float Map::GetAngle(DX::XMVECTOR vec)
 	float angle;
 	DX::XMStoreFloat(&angle, DX::XMVector2AngleBetweenVectors(vec, axis));
 	return angle;
+}
+
+Map Map::CreateSomeMap()
+{
+	Map ret;
+	ret.Add(Line(DX::XMFLOAT2(-10.0f, 10.0f), DX::XMFLOAT2(0.0f, 10.0f)));
+	ret.Add(Line(DX::XMFLOAT2(0.0f, 15.0f), DX::XMFLOAT2(10.0f, 15.0f)));
+	return ret;
 }

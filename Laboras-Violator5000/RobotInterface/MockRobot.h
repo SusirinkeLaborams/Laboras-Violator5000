@@ -2,6 +2,7 @@
 #include "RobotBase.h"
 #include "ReceiverImpl.h"
 #include "IncomingData.h"
+#include "Map.h"
 
 class MockRobot : public RobotBase<MockRobot>
 {
@@ -27,13 +28,15 @@ private:
 	DX::XMFLOAT2 direction;
 	Action action;
 	long time;
+	Map map;
 
 	//methods
 protected:
 	void Update();
+	void Update(Action action);
 
 public:
-	MockRobot();
+	MockRobot(Map &&map);
 	IncomingData GetData();
 	void SetDirection(DX::XMFLOAT2 dir);
 };

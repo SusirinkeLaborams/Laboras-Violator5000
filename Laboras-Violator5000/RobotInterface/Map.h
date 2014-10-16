@@ -1,6 +1,7 @@
 #pragma once
 #include "IncomingData.h"
-class Map
+#include "Core\NonCopyable.h"
+class Map : NonCopyable
 {
 public:
 	struct Line
@@ -17,8 +18,15 @@ private:
 
 public:
 
+	Map() = default;
+	Map(Map &&other)
+		:lines(std::move(other.lines))
+	{}
+
 	void Add(Line line);
-	bool GetCollision(const Line &line, DX::XMFLOAT2 &point);
+	DX::XMFLOAT2 GetCollision(const Line &line);
+
+	static Map CreateSomeMap();
 
 private:
 	bool GetCollision(const Line &first, const Line &second, DX::XMFLOAT2 &point);
