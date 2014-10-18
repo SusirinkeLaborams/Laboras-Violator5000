@@ -8,9 +8,9 @@ GameLoop::GameLoop() :
 	m_GraphicsContext(m_Window, Settings::kWidth, Settings::kHeight, Settings::kFullscreen),
 	m_Input(Input::GetInstance()),
 	m_Camera(static_cast<float>(m_Window.GetWidth()) / static_cast<float>(m_Window.GetHeight())),
-	m_Robot(Map::CreateSomeMap()),
 	m_RobotPosition(0.0f, 0.0f, 0.0f),
-	m_RobotDirection(0.0f, 0.0f)
+	m_RobotRotation(0.0f),
+	m_Robot(m_RobotPosition, m_RobotRotation, Map::CreateSomeMap())
 {
 	m_Robot.GetReceiver().StartReceiving([this](const IncomingData& data)
 	{
@@ -85,11 +85,7 @@ void GameLoop::UpdateRobotData()
 	m_Tank.SetPosition(m_RobotPosition);
 	m_Camera.SetPosition(DirectX::XMFLOAT3(m_RobotPosition.x, m_RobotPosition.y, m_RobotPosition.z + 1.0f));
 
-	float robotRotation = -asin(m_RobotDirection.x);
-	if (m_RobotDirection.y < 0.0f)
-		robotRotation += DirectX::XM_PI;
-
-	DirectX::XMFLOAT3 rotation(0.0f, 0.0f, robotRotation);
+	DirectX::XMFLOAT3 rotation(0.0f, 0.0f, m_RobotRotation);
 	m_Tank.SetRotation(rotation);
 	m_Camera.SetRotation(rotation);
 
@@ -115,7 +111,7 @@ void GameLoop::ReceiveRobotData(const IncomingData& data)
 
 	m_RobotPosition.x = data.robotPosition.y;
 	m_RobotPosition.y = data.robotPosition.y;
-//	m_RobotDirection = data.robotDirection;
+	m_RobotRotation = data.robotRotation;
 
 	for (const auto& sensorData : data.data)
 	{

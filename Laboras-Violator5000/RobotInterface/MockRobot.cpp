@@ -7,10 +7,10 @@ using namespace DirectX;
 const float MockRobot::velocity = 1.0f;
 const float MockRobot::angular = 1.0f;
 
-MockRobot::MockRobot(Map &&map)
+MockRobot::MockRobot(DirectX::XMFLOAT3 position, float rotation, Map &&map)
 	:RobotBase(*this), 
-	position(0.0f, 0.0f), 
-	rotation(1.570796327f),
+	position(position.x, position.y), 
+	rotation(rotation),
 	action(Action::NONE),
 	time(static_cast<float>(Utilities::GetTime())),
 	map(std::forward<Map>(map))
@@ -30,10 +30,10 @@ IncomingData MockRobot::GetData()
 	auto worldMatrix = XMMatrixTranslation(position.x, position.y, 0.0f);
 	auto beam = XMVectorSet(200.0f, 0.0f, 0.0f, 0.0f);
 
-	ret.data[0] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(1.30899f) * worldMatrix)));//75 deg
-	ret.data[1] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(1.83259f) * worldMatrix)));//105 deg
-	ret.data[2] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(0.52359f) * worldMatrix)));//30 deg
-	ret.data[3] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(2.61799f) * worldMatrix)));//150 deg
+	ret.data[0] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(rotation + 0.261799f) * worldMatrix)));//15 left
+	ret.data[1] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(rotation - 0.261799f) * worldMatrix)));//15 right
+	ret.data[2] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(rotation + 0.698131f) * worldMatrix)));//40 left
+	ret.data[3] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(rotation - 0.698131f) * worldMatrix)));//40 right
 
 	return ret;
 }

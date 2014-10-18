@@ -37,7 +37,7 @@ protected:
 	void Update(Action action);
 
 public:
-	MockRobot(Map &&map);
+	MockRobot(DirectX::XMFLOAT3 position, float rotation, Map &&map);
 	IncomingData GetData();
 	void SetDirection(DirectX::XMFLOAT2 dir);
 };

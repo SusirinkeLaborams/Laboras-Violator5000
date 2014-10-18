@@ -16,7 +16,6 @@ private:
 	Window m_Window;
 	D3D11GraphicsContext m_GraphicsContext;
 	Input& m_Input;
-	MockRobot m_Robot;
 
 	OrthographicCamera m_Camera;
 	Environment m_Enviroment;
@@ -24,7 +23,8 @@ private:
 
 	CriticalSection m_CriticalSection;
 	DirectX::XMFLOAT3 m_RobotPosition;
-	DirectX::XMFLOAT2 m_RobotDirection;
+	float m_RobotRotation;
+	MockRobot m_Robot;
 	std::vector<DirectX::XMFLOAT2> m_SensorData;
 
 	void UpdateAndDraw();
