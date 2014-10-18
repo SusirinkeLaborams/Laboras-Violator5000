@@ -6,11 +6,15 @@ class Map : NonCopyable
 public:
 	struct Line
 	{
-		const DirectX::XMFLOAT2 Start;
-		const DirectX::XMFLOAT2 End;
+		DirectX::XMFLOAT2 Start;
+		DirectX::XMFLOAT2 End;
 		Line(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end)
 			:Start(start), End(end){}
-		float Length(){ return 1.0f; }
+		Line(DirectX::XMFLOAT2 start, DirectX::XMVECTOR end)
+			:Start(start)
+		{
+			DirectX::XMStoreFloat2(&End, end);
+		}
 	};
 
 private:

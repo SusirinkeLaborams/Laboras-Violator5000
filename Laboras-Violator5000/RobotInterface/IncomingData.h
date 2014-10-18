@@ -6,6 +6,6 @@ public:
 	static const int kSensorCount = 4;
 
 	DirectX::XMFLOAT2 robotPosition;
-	DirectX::XMFLOAT2 robotDirection;
+	float robotRotation;
 	DirectX::XMFLOAT2 data[kSensorCount];
 };

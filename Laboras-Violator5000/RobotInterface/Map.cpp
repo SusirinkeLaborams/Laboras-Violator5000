@@ -33,7 +33,7 @@ DirectX::XMFLOAT2 Map::GetCollision(const Line &line)
 			}
 		}
 	}
-	return found ? point : line.End;
+	return found ? point : DirectX::XMFLOAT2(NAN, NAN);
 }
 
 bool Map::GetCollision(const Line &first, const Line &second, DirectX::XMFLOAT2 &point)

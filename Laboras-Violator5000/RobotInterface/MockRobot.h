@@ -26,7 +26,7 @@ private:
 
 	Mutex mutex;
 	DirectX::XMFLOAT2 position;
-	DirectX::XMFLOAT2 direction;
+	float rotation;
 	Action action;
 	float time;
 	Map map;

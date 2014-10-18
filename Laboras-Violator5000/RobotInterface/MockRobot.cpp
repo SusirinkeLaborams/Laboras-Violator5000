@@ -10,7 +10,7 @@ const float MockRobot::angular = 1.0f;
 MockRobot::MockRobot(Map &&map)
 	:RobotBase(*this), 
 	position(0.0f, 0.0f), 
-	direction(0.0f, 1.0f),
+	rotation(1.570796327f),
 	action(Action::NONE),
 	time(static_cast<float>(Utilities::GetTime())),
 	map(std::forward<Map>(map))
@@ -24,11 +24,16 @@ IncomingData MockRobot::GetData()
 
 	IncomingData ret;
 	ret.robotPosition = position;
+	ret.robotRotation = rotation;
 
-	ret.data[0] = map.GetCollision(Map::Line(position, XMFLOAT2(position.x - 300.0f, position.y + 200.0f)));
-	ret.data[1] = map.GetCollision(Map::Line(position, XMFLOAT2(position.x - 100.0f, position.y + 300.0f)));
-	ret.data[2] = map.GetCollision(Map::Line(position, XMFLOAT2(position.x + 100.0f, position.y + 300.0f)));
-	ret.data[3] = map.GetCollision(Map::Line(position, XMFLOAT2(position.x + 300.0f, position.y + 200.0f)));
+
+	auto worldMatrix = XMMatrixTranslation(position.x, position.y, 0.0f);
+	auto beam = XMVectorSet(200.0f, 0.0f, 0.0f, 0.0f);
+
+	ret.data[0] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(1.30899f) * worldMatrix)));//75 deg
+	ret.data[1] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(1.83259f) * worldMatrix)));//105 deg
+	ret.data[2] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(0.52359f) * worldMatrix)));//30 deg
+	ret.data[3] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(2.61799f) * worldMatrix)));//150 deg
 
 	return ret;
 }
@@ -42,27 +47,25 @@ void MockRobot::Update()
 
 	if (action == Action::FORWARD)
 	{
-		auto pos = XMLoadFloat2(&position) + XMLoadFloat2(&direction) * (velocity * passed);
+		auto matrix = XMMatrixRotationZ(rotation);
+		auto dir = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+		auto pos = XMLoadFloat2(&position) + XMVector3Transform(dir, matrix) * (velocity * passed);
 		XMStoreFloat2(&position, pos);
 	}
 	else if (action == Action::BACKWARD)
 	{
-		auto pos = XMLoadFloat2(&position) - XMLoadFloat2(&direction) * (velocity * passed);
+		auto matrix = XMMatrixRotationZ(rotation);
+		auto dir = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+		auto pos = XMLoadFloat2(&position) - XMVector3Transform(dir, matrix) * (velocity * passed);
 		XMStoreFloat2(&position, pos);
 	}
 	else if (action == Action::LEFT)
 	{
-		auto dir = XMLoadFloat2(&direction);
-		auto matrix = XMMatrixRotationZ(angular * passed);
-		dir = XMVector3Transform(dir, matrix);
-		XMStoreFloat2(&direction, dir);
+		rotation += angular * passed;
 	}
 	else if (action == Action::RIGHT)
 	{
-		auto dir = XMLoadFloat2(&direction);
-		auto matrix = XMMatrixRotationZ(-angular * passed);
-		dir = XMVector3Transform(dir, matrix);
-		XMStoreFloat2(&direction, dir);
+		rotation -= angular * passed;
 	}
 
 	time = now;
