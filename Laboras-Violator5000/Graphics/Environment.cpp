@@ -34,7 +34,11 @@ void Environment::AddData(const std::vector<DirectX::XMFLOAT2>& data)
 {
 	for (const auto& dataItem : data)
 	{
-		AddData(dataItem);
+		// Check for NaN
+		if (dataItem.x == dataItem.x && dataItem.y == dataItem.y)
+		{
+			AddData(dataItem);
+		}
 	}
 }
 
@@ -46,8 +50,7 @@ void Environment::Render(const DirectX::XMMATRIX& viewProjectionMatrix)
 	UploadConstantBufferData(viewProjectionMatrix, time);
 	
 	// Figure out what to draw
-
-
+	
 	while (m_BufferBegin != m_BufferEnd)
 	{
 		if (time - m_DataBuffer[m_BufferBegin].timestamp < Settings::kPathTracingDecayTime)

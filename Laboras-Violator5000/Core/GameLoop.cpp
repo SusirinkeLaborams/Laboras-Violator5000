@@ -68,11 +68,15 @@ void GameLoop::Update()
 		movementVector.x += 1.0f;
 	}
 
-	// Normalize movement vector 
+	// Normalize movement vector
 
 	auto length = sqrt(Utilities::Vector2LengthSqr(movementVector));
-	movementVector.x /= length;
-	movementVector.y /= length;
+
+	if (length > 0.0f)
+	{
+		movementVector.x /= length;
+		movementVector.y /= length;
+	}
 
 	UpdateRobotData();
 	m_Robot.SetDirection(movementVector);
