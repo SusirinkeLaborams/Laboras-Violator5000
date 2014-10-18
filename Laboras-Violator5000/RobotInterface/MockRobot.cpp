@@ -12,7 +12,7 @@ MockRobot::MockRobot(Map &&map)
 	position(0.0f, 0.0f), 
 	direction(0.0f, 1.0f),
 	action(Action::NONE),
-	time(Utilities::GetTime()),
+	time(static_cast<float>(Utilities::GetTime())),
 	map(std::forward<Map>(map))
 {
 
@@ -37,7 +37,7 @@ void MockRobot::Update()
 {
 	Lock lock(mutex);
 
-	auto now = Utilities::GetTime();
+	auto now = static_cast<float>(Utilities::GetTime());
 	auto passed = now - time;
 
 	if (action == Action::FORWARD)

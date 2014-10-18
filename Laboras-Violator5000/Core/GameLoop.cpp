@@ -2,6 +2,7 @@
 #include "GameLoop.h"
 #include "Input.h"
 #include "Settings.h"
+#include "Utilities\Utilities.h"
 
 GameLoop::GameLoop() :
 	m_GraphicsContext(m_Window, Settings::kWidth, Settings::kHeight, Settings::kFullscreen),
@@ -45,6 +46,33 @@ void GameLoop::Update()
 	{
 		m_Input.Quit();
 	}
+
+	DirectX::XMFLOAT2 movementVector(0.0f, 0.0f);
+
+	if (m_Input.IsKeyDown(VK_UP))
+	{
+		movementVector.y += 1.0f;
+	}
+	if (m_Input.IsKeyDown(VK_DOWN))
+	{
+		movementVector.y -= 1.0f;
+	}
+	if (m_Input.IsKeyDown(VK_LEFT))
+	{
+		movementVector.x -= 1.0f;
+	}
+	if (m_Input.IsKeyDown(VK_RIGHT))
+	{
+		movementVector.x += 1.0f;
+	}
+
+	// Normalize movement vector 
+
+	auto length = sqrt(Utilities::Vector2LengthSqr(movementVector));
+	movementVector.x /= length;
+	movementVector.y /= length;
+
+	m_Robot.SetDirection(movementVector);
 }
 
 void GameLoop::Render()

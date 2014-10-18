@@ -28,7 +28,7 @@ private:
 	DirectX::XMFLOAT2 position;
 	DirectX::XMFLOAT2 direction;
 	Action action;
-	double time;
+	float time;
 	Map map;
 
 	//methods
