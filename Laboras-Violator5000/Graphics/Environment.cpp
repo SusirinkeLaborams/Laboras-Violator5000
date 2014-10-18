@@ -18,18 +18,23 @@ Environment::~Environment()
 {
 }
 
-void Environment::AddData(const DirectX::XMFLOAT2(&data)[IncomingData::kSensorCount])
+void Environment::AddData(const DirectX::XMFLOAT2& dataItem)
+{
+	m_DataBuffer[m_BufferEnd].position = dataItem;
+	m_DataBuffer[m_BufferEnd].timestamp = static_cast<float>(Utilities::GetTime());
+
+	m_BufferEnd = (m_BufferEnd + 1) % Settings::kPathTracingBufferSize;
+	if (m_BufferEnd == m_BufferBegin)
+	{
+		m_BufferBegin = (m_BufferBegin + 1) % Settings::kPathTracingBufferSize;
+	}
+}
+
+void Environment::AddData(const std::vector<DirectX::XMFLOAT2>& data)
 {
 	for (const auto& dataItem : data)
 	{
-		m_DataBuffer[m_BufferEnd].position = dataItem;
-		m_DataBuffer[m_BufferEnd].timestamp = static_cast<float>(Utilities::GetTime());
-
-		m_BufferEnd = (m_BufferEnd + 1) % Settings::kPathTracingBufferSize;
-		if (m_BufferEnd == m_BufferBegin)
-		{
-			m_BufferBegin = (m_BufferBegin + 1) % Settings::kPathTracingBufferSize;
-		}
+		AddData(dataItem);
 	}
 }
 

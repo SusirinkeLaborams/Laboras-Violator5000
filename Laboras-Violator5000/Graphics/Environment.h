@@ -41,6 +41,7 @@ public:
 	Environment();
 	~Environment();
 
-	void AddData(const DirectX::XMFLOAT2 (&data)[IncomingData::kSensorCount]);
+	void AddData(const DirectX::XMFLOAT2& dataItem);
+	void AddData(const std::vector<DirectX::XMFLOAT2>& data);
 	void Render(const DirectX::XMMATRIX& viewProjectionMatrix);
 };
