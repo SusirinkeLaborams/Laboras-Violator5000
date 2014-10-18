@@ -113,6 +113,9 @@
     <ClInclude Include="RobotInterface\Map.h">
       <Filter>RobotInterface</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\CriticalSection.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\TankVertexShader.hlsl">

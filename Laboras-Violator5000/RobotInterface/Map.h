@@ -6,9 +6,9 @@ class Map : NonCopyable
 public:
 	struct Line
 	{
-		const DX::XMFLOAT2 Start;
-		const DX::XMFLOAT2 End;
-		Line(DX::XMFLOAT2 start, DX::XMFLOAT2 end)
+		const DirectX::XMFLOAT2 Start;
+		const DirectX::XMFLOAT2 End;
+		Line(DirectX::XMFLOAT2 start, DirectX::XMFLOAT2 end)
 			:Start(start), End(end){}
 		float Length(){ return 1.0f; }
 	};
@@ -24,12 +24,12 @@ public:
 	{}
 
 	void Add(Line line);
-	DX::XMFLOAT2 GetCollision(const Line &line);
+	DirectX::XMFLOAT2 GetCollision(const Line &line);
 
 	static Map CreateSomeMap();
 
 private:
-	bool GetCollision(const Line &first, const Line &second, DX::XMFLOAT2 &point);
-	float GetAngle(DX::XMVECTOR vec);
+	bool GetCollision(const Line &first, const Line &second, DirectX::XMFLOAT2 &point);
+	float GetAngle(DirectX::XMVECTOR vec);
 };
 

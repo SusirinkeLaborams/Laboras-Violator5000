@@ -7,10 +7,10 @@ void Map::Add(Line line)
 	lines.push_back(line);
 }
 
-DX::XMFLOAT2 Map::GetCollision(const Line &line)
+DirectX::XMFLOAT2 Map::GetCollision(const Line &line)
 {
 	bool found = false;
-	DX::XMFLOAT2 tmpPoint, point;
+	DirectX::XMFLOAT2 tmpPoint, point;
 	float distance;
 	for (auto l : lines)
 	{
@@ -36,7 +36,7 @@ DX::XMFLOAT2 Map::GetCollision(const Line &line)
 	return found ? point : line.End;
 }
 
-bool Map::GetCollision(const Line &first, const Line &second, DX::XMFLOAT2 &point)
+bool Map::GetCollision(const Line &first, const Line &second, DirectX::XMFLOAT2 &point)
 {
 	float Ax = first.Start.x;
 	float Ay = first.Start.y;
@@ -87,22 +87,22 @@ bool Map::GetCollision(const Line &first, const Line &second, DX::XMFLOAT2 &poin
 		return false;
 
 	//  (4) Apply the discovered position to line A-B in the original coordinate system.
-	point = DX::XMFLOAT2(Ax + ABpos*theCos, Ay + ABpos*theSin);
+	point = DirectX::XMFLOAT2(Ax + ABpos*theCos, Ay + ABpos*theSin);
 	return true;
 }
 
-float Map::GetAngle(DX::XMVECTOR vec)
+float Map::GetAngle(DirectX::XMVECTOR vec)
 {
-	auto axis = DX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+	auto axis = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
 	float angle;
-	DX::XMStoreFloat(&angle, DX::XMVector2AngleBetweenVectors(vec, axis));
+	DirectX::XMStoreFloat(&angle, DirectX::XMVector2AngleBetweenVectors(vec, axis));
 	return angle;
 }
 
 Map Map::CreateSomeMap()
 {
 	Map ret;
-	ret.Add(Line(DX::XMFLOAT2(-10.0f, 10.0f), DX::XMFLOAT2(0.0f, 10.0f)));
-	ret.Add(Line(DX::XMFLOAT2(0.0f, 15.0f), DX::XMFLOAT2(10.0f, 15.0f)));
+	ret.Add(Line(DirectX::XMFLOAT2(-10.0f, 10.0f), DirectX::XMFLOAT2(0.0f, 10.0f)));
+	ret.Add(Line(DirectX::XMFLOAT2(0.0f, 15.0f), DirectX::XMFLOAT2(10.0f, 15.0f)));
 	return ret;
 }

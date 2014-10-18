@@ -3,12 +3,13 @@
 #include "ReceiverImpl.h"
 #include "IncomingData.h"
 #include "Map.h"
+#include "Utilities\CriticalSection.h"
 
 class MockRobot : public RobotBase<MockRobot>
 {
 private:
-	using Mutex = std::recursive_mutex;
-	using Lock = std::lock_guard<Mutex>;
+	using Mutex = CriticalSection;
+	using Lock = CriticalSection::Lock;
 
 	enum Action
 	{
@@ -24,8 +25,8 @@ private:
 	static const float angular;
 
 	Mutex mutex;
-	DX::XMFLOAT2 position;
-	DX::XMFLOAT2 direction;
+	DirectX::XMFLOAT2 position;
+	DirectX::XMFLOAT2 direction;
 	Action action;
 	long time;
 	Map map;
@@ -38,5 +39,5 @@ protected:
 public:
 	MockRobot(Map &&map);
 	IncomingData GetData();
-	void SetDirection(DX::XMFLOAT2 dir);
+	void SetDirection(DirectX::XMFLOAT2 dir);
 };

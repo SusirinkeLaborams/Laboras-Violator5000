@@ -1,7 +1,8 @@
 #include "PrecompiledHeader.h"
 #include "MockRobot.h"
+#include "Utilities\Utilities.h"
 
-using namespace DX;
+using namespace DirectX;
 
 const float MockRobot::velocity = 1.0f;
 const float MockRobot::angular = 1.0f;
@@ -24,10 +25,10 @@ IncomingData MockRobot::GetData()
 	IncomingData ret;
 	ret.robotPosition = position;
 
-	ret.data[0] = map.GetCollision(Map::Line(position, DX::XMFLOAT2(position.x - 300.0f, position.y + 200.0f)));
-	ret.data[1] = map.GetCollision(Map::Line(position, DX::XMFLOAT2(position.x - 100.0f, position.y + 300.0f)));
-	ret.data[2] = map.GetCollision(Map::Line(position, DX::XMFLOAT2(position.x + 100.0f, position.y + 300.0f)));
-	ret.data[3] = map.GetCollision(Map::Line(position, DX::XMFLOAT2(position.x + 300.0f, position.y + 200.0f)));
+	ret.data[0] = map.GetCollision(Map::Line(position, XMFLOAT2(position.x - 300.0f, position.y + 200.0f)));
+	ret.data[1] = map.GetCollision(Map::Line(position, XMFLOAT2(position.x - 100.0f, position.y + 300.0f)));
+	ret.data[2] = map.GetCollision(Map::Line(position, XMFLOAT2(position.x + 100.0f, position.y + 300.0f)));
+	ret.data[3] = map.GetCollision(Map::Line(position, XMFLOAT2(position.x + 300.0f, position.y + 200.0f)));
 
 	return ret;
 }
@@ -74,12 +75,12 @@ void MockRobot::Update(Action newAction)
 	action = newAction;
 }
 
-void MockRobot::SetDirection(DX::XMFLOAT2 dir)
+void MockRobot::SetDirection(DirectX::XMFLOAT2 dir)
 {
 	Action newAction;
 
 	//tingiu skaiciuot
-	if (DX::XMVectorGetIntX(DX::XMVector2Length(DX::XMLoadFloat2(&dir))) <= 0.1f)
+	if (Utilities::Vector2LengthSqr(dir) <= 0.01f)
 	{
 		newAction = Action::NONE;
 	}
