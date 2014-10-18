@@ -6,6 +6,7 @@
 #include "Graphics\Tank.h"
 #include "NonCopyable.h"
 #include "RobotInterface\MockRobot.h"
+#include "Utilities\CriticalSection.h"
 #include "Window.h"
 
 class Input;
@@ -21,8 +22,14 @@ private:
 	Environment m_Enviroment;
 	Tank m_Tank;
 
+	CriticalSection m_CriticalSection;
+	DirectX::XMFLOAT3 m_RobotPosition;
+	DirectX::XMFLOAT2 m_RobotDirection;
+	std::vector<DirectX::XMFLOAT2> m_SensorData;
+
 	void UpdateAndDraw();
 	void Update();
+	void UpdateRobotData();
 	void Render();
 	void ReceiveRobotData(const IncomingData& data);
 
