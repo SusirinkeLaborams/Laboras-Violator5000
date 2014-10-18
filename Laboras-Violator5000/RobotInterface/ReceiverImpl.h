@@ -7,9 +7,9 @@ class ReceiverImpl : NonCopyable
 {
 	std::thread loopThread;
 	volatile bool running;
-	const Robot &robot;
+	Robot &robot;
 public:
-	ReceiverImpl(const Robot &robot);
+	ReceiverImpl(Robot &robot);
 	ReceiverImpl(ReceiverImpl&&) = delete;
 
 	~ReceiverImpl();
@@ -24,7 +24,7 @@ private:
 };
 
 template<typename Robot>
-ReceiverImpl<Robot>::ReceiverImpl(const Robot &robot)
+ReceiverImpl<Robot>::ReceiverImpl(Robot &robot)
 	:robot(robot), running(false)
 {
 }
@@ -53,7 +53,7 @@ void ReceiverImpl<Robot>::StartInternal(Callback callback)
 {
 	while (running)
 	{
-		//stuff
+		callback(robot.GetData());
 	}
 }
 

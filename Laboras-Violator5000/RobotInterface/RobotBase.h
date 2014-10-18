@@ -18,7 +18,7 @@ private:
 	Receiver receiver;
 
 public:
-	RobotBase(const Robot &robot);
+	RobotBase(Robot &robot);
 	Receiver& GetReceiver();
 };
 
@@ -29,7 +29,7 @@ typename RobotBase<Robot>::Receiver& RobotBase<Robot>::GetReceiver()
 }
 
 template<typename Robot>
-RobotBase<Robot>::RobotBase(const Robot &robot)
+RobotBase<Robot>::RobotBase(Robot &robot)
 	:receiver(robot)
 {
 }
