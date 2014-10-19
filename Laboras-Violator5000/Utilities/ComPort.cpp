@@ -1,7 +1,6 @@
 #include "PrecompiledHeader.h"
 #include "ComPort.h"
 
-
 ComPort::ComPort(std::string name)
 	:name(name)
 {
@@ -14,7 +13,7 @@ ComPort::~ComPort()
 	Close();
 }
 
-bool ComPort::Open()
+void ComPort::Open()
 {
 	handle = CreateFileA(
 		name.c_str(),

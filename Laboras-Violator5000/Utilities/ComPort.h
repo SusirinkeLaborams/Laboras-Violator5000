@@ -6,7 +6,7 @@ class ComPort
 	bool open;
 	std::string name;
 public:
-	bool Open();
+	void Open();
 	void Close();
 	bool IsOpen(){ return open; }
 
@@ -66,7 +66,7 @@ void ComPort::Write(const T &data)
 	writer.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 	Assert(writer.hEvent != NULL);
 
-	if (!WriteFile(handle, &data, sizeof(T), &written, TRUE)
+	if (!WriteFile(handle, &data, sizeof(T), &written, TRUE))
 	{
 		Assert(GetLastError() == ERROR_IO_PENDING);
 		Assert(WaitForSingleObject(writer, INFINITE) == WAIT_OBJECT_0);
