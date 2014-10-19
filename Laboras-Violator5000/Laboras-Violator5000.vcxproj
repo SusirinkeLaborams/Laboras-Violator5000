@@ -105,6 +105,7 @@
     <ClCompile Include="Graphics\Tank.cpp" />
     <ClCompile Include="RobotInterface\Map.cpp" />
     <ClCompile Include="RobotInterface\MockRobot.cpp" />
+    <ClCompile Include="Utilities\ComPort.cpp" />
     <ClCompile Include="Utilities\Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +124,7 @@
     <ClInclude Include="RobotInterface\MockRobot.h" />
     <ClInclude Include="RobotInterface\ReceiverImpl.h" />
     <ClInclude Include="RobotInterface\RobotBase.h" />
+    <ClInclude Include="Utilities\ComPort.h" />
     <ClInclude Include="Utilities\CriticalSection.h" />
     <ClInclude Include="Utilities\DllFunctionInvoker.h" />
     <ClInclude Include="Utilities\Utilities.h" />

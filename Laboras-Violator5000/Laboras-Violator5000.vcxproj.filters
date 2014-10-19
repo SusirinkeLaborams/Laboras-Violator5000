@@ -57,6 +57,9 @@
     <ClCompile Include="RobotInterface\Map.cpp">
       <Filter>RobotInterface</Filter>
     </ClCompile>
+    <ClCompile Include="Utilities\ComPort.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\D3D11GraphicsContextHelpers.inl">
@@ -114,6 +117,9 @@
       <Filter>RobotInterface</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\CriticalSection.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\ComPort.h">
       <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
