@@ -102,7 +102,7 @@ float Map::GetAngle(DirectX::XMVECTOR vec)
 Map Map::CreateSomeMap()
 {
 	Map ret;
-	ret.Add(Line(DirectX::XMFLOAT2(-100.0f, 10.0f), DirectX::XMFLOAT2(0.0f, 100.0f)));
+	ret.Add(Line(DirectX::XMFLOAT2(-100.0f, 100.0f), DirectX::XMFLOAT2(0.0f, 100.0f)));
 	ret.Add(Line(DirectX::XMFLOAT2(0.0f, 150.0f), DirectX::XMFLOAT2(100.0f, 150.0f)));
 	return ret;
 }
