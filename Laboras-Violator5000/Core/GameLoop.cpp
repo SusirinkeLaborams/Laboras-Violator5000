@@ -113,7 +113,7 @@ void GameLoop::ReceiveRobotData(const IncomingData& data)
 {
 	CriticalSection::Lock lock(m_CriticalSection);
 
-	m_RobotPosition.x = data.robotPosition.y;
+	m_RobotPosition.x = data.robotPosition.x;
 	m_RobotPosition.y = data.robotPosition.y;
 	m_RobotRotation = data.robotRotation;
 
