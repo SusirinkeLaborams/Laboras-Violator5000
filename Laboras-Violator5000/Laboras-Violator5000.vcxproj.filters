@@ -122,6 +122,9 @@
     <ClInclude Include="Utilities\ComPort.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="RobotInterface\RemoteRobot.h">
+      <Filter>RobotInterface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\TankVertexShader.hlsl">

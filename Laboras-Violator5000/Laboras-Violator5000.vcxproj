@@ -123,6 +123,7 @@
     <ClInclude Include="RobotInterface\Map.h" />
     <ClInclude Include="RobotInterface\MockRobot.h" />
     <ClInclude Include="RobotInterface\ReceiverImpl.h" />
+    <ClInclude Include="RobotInterface\RemoteRobot.h" />
     <ClInclude Include="RobotInterface\RobotBase.h" />
     <ClInclude Include="Utilities\ComPort.h" />
     <ClInclude Include="Utilities\CriticalSection.h" />

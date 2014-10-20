@@ -53,12 +53,7 @@ void ReceiverImpl<Robot>::StartInternal(Callback callback)
 {
 	while (running)
 	{
-		for (int i = 0; i < 10; i++)
-		{
-			callback(robot.GetData());
-		}
-
-		Sleep(16);
+		callback(robot.GetData());
 	}
 }
 

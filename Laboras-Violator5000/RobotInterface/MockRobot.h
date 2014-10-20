@@ -3,14 +3,9 @@
 #include "ReceiverImpl.h"
 #include "IncomingData.h"
 #include "Map.h"
-#include "Utilities\CriticalSection.h"
 
 class MockRobot : public RobotBase<MockRobot>
 {
-private:
-	using Mutex = CriticalSection;
-	using Lock = CriticalSection::Lock;
-
 	enum Action
 	{
 		NONE,
@@ -24,7 +19,6 @@ private:
 	static const float velocity;
 	static const float angular;
 
-	Mutex mutex;
 	DirectX::XMFLOAT2 position;
 	float rotation;
 	Action action;
