@@ -4,7 +4,7 @@
 
 using namespace DirectX;
 
-const float MockRobot::velocity = 10.0f;
+const float MockRobot::velocity = 30.0f;
 const float MockRobot::angular = 1.0f;
 
 MockRobot::MockRobot(DirectX::XMFLOAT3 position, float rotation, Map &&map)
