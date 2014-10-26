@@ -45,8 +45,7 @@ T ComPort::Read()
 		switch (WaitForSingleObject(reader, 2000))
 		{
 		case WAIT_OBJECT_0:
-			auto result = GetOverlappedResult(handle, &reader, &dwRead, FALSE)
-			Assert(ResultFromScode);
+			Assert(GetOverlappedResult(handle, &reader, &dwRead, FALSE));
 			Assert(dwRead == sizeof(T));
 		case WAIT_TIMEOUT:
 		default:
@@ -67,10 +66,10 @@ void ComPort::Write(const T &data)
 	writer.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 	Assert(writer.hEvent != NULL);
 
-	if (!WriteFile(handle, &data, sizeof(T), &written, TRUE))
+	if (!WriteFile(handle, &data, sizeof(T), &written, &writer))
 	{
-		auto lastError = GetLastError();//to consume the error on release
-		Assert(lastError == ERROR_IO_PENDING);
+		Assert(GetLastError() == ERROR_IO_PENDING);
+		SetLastError(ERROR_SUCCESS);//fuck winapi
 		auto waitResult = WaitForSingleObject(writer, INFINITE);
 		Assert(waitResult == WAIT_OBJECT_0);
 		auto overlappedResult = GetOverlappedResult(handle, writer, &written, FALSE);
