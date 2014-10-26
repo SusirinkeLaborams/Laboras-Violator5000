@@ -24,6 +24,17 @@ void ComPort::Open()
 		FILE_FLAG_OVERLAPPED,
 		0);
 	open = (handle != INVALID_HANDLE_VALUE);
+
+	if (open)
+	{
+		DCB dcb;
+		ZeroMemory(&dcb, sizeof(dcb));
+		dcb.BaudRate = CBR_9600;
+		dcb.ByteSize = 8;
+		dcb.StopBits = ONESTOPBIT;
+		dcb.Parity = NOPARITY;
+		SetCommState(handle, &dcb);
+	}
 }
 
 void ComPort::Close()
