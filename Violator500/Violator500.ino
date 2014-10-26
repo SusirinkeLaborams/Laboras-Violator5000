@@ -55,81 +55,27 @@ const int EngineCount = 2;
 void setup()
 {
 	Engines[0] = Engine(4, 5);
-	Engines[1] = Engine(6, 7);
+	Engines[1] = Engine(7, 6);
 	
 	Serial.begin(9600);	
 }
 
-bool ReadInput(RobotInput &result)
-{
-	uint8_t magicByte = Serial.peek();
-	if (magicByte == RobotInput::MagicByte)
-	{
-		RobotInput input;
-		int bytesRead = 0;
-		while (bytesRead != sizeof(input))
-		{
-			bytesRead += Serial.readBytes((char *)(&input + bytesRead), sizeof(input) - bytesRead);
-		}
 
-		if (input.Hash == Hash(input))
-		{
-			result = input;
-			return true;
-		}
-		//Serial.println("Bad hash");
-	}
-	else
-	{
-		//Serial.println("				No magic byte");
-	}
-
-	while (Serial.available() && Serial.peek() != RobotInput::MagicByte)
-	{
-		Serial.read();
-	}
-	return false;	
-}
-
-bool InputAvailable()
-{
-	return Serial.available() >= sizeof(RobotInput);
-}
-int i = 0;
 void loop()
 {
-	if (InputAvailable())
+}
+
+void serialEvent()
+{
+	if (Serial.available())
 	{
-		i = 0;
 		RobotInput input;
-		if (ReadInput(input))
-		{
-			//Engines[input.Engine].SetDirection(input.Direction);
-			//Engines[input.Engine].SetSpeed(input.Power);
-			Serial.print("Engine ");
-			Serial.print(input.Engine);
-			Serial.print(" power ");
-			Serial.print(input.Power);
-			Serial.print(" direction ");
-			Serial.println(input.Direction);
-		}
-		else
-		{
-			Serial.println("failed to read");
-		}
-	}
-	else
-	{
-		i++;
-		if (i == 1000)
-		{
-			////digitalWrite(EN, LOW);
-			int i = Serial.available();
-			//Serial.print(2);
-			Serial.print(i);
-			Serial.println(" No input");
-			i = 0;
-		}
+		Serial.readBytes((char*) &input, 1);
+		
+		Engines[0].SetDirection(input.DirectionL);
+		Engines[0].SetSpeed(input.PowerL * 30);
+		Engines[1].SetDirection(input.DirectionR);
+		Engines[1].SetSpeed(input.PowerR * 30);
 	}
 }
 

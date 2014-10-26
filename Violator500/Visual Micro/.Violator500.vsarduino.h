@@ -40,9 +40,8 @@ typedef unsigned char byte;
 extern "C" void __cxa_pure_virtual() {;}
 
 //
-bool ReadInput(RobotInput &result);
-bool InputAvailable();
 //
+void serialEvent();
 
 #include "C:\Users\Andrius\Desktop\arduino-1.0.6-windows\arduino-1.0.6\hardware\arduino\cores\arduino\arduino.h"
 #include "C:\Users\Andrius\Desktop\arduino-1.0.6-windows\arduino-1.0.6\hardware\arduino\variants\standard\pins_arduino.h" 
