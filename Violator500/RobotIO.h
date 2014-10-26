@@ -1,0 +1,41 @@
+#ifdef ARDUINO
+#include "Arduino.h"
+#else
+using uint8_t = unsigned char;
+#endif
+
+const uint8_t SensorCount = 2;
+struct RobotInput {
+public:
+	static const uint8_t MagicByte = 255;
+	uint8_t Magic;
+	uint8_t Hash;
+	uint8_t Engine;
+	uint8_t Direction;
+	uint8_t Power;
+};
+
+uint8_t Hash(RobotInput e)
+{
+	uint8_t hash = 0;
+	hash = e.Engine ^ e.Direction ^ e.Power;
+	return hash;
+}
+
+struct RobotOutput {
+public:
+    static const uint8_t MagicByte = 255;
+	uint8_t Magic;
+	uint8_t Hash;
+	uint8_t Sensors[SensorCount];
+};
+
+uint8_t Hash(RobotOutput e)
+{
+	uint8_t hash = 0;
+	for (int i = 0; i < SensorCount; i++)
+	{
+		hash ^= e.Sensors[i];
+	}
+	return hash;
+}
