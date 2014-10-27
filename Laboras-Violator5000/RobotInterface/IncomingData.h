@@ -3,7 +3,7 @@
 struct IncomingData
 {
 public:
-	static const int kSensorCount = 4;
+	static const int kSensorCount = 2;
 
 	DirectX::XMFLOAT2 robotPosition;
 	float robotRotation;

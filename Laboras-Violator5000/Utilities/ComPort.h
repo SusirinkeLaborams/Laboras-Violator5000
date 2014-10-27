@@ -1,6 +1,6 @@
 #pragma once
 #include "PrecompiledHeader.h"
-#include "../Violator500/RobotIO.h"
+#include "RobotInterface\Interface.h"
 class ComPort
 {
 private:

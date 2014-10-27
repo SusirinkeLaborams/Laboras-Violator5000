@@ -1,24 +1,24 @@
 #include "PrecompiledHeader.h"
-#include "MockRobot.h"
+#include "RemoteRobot.h"
 #include "Utilities\Utilities.h"
 
 using namespace DirectX;
 
-const float MockRobot::velocity = 30.0f;
-const float MockRobot::angular = 1.0f;
+const float RemoteRobot::velocity = 30.0f;
+const float RemoteRobot::angular = 1.0f;
 
-MockRobot::MockRobot(DirectX::XMFLOAT3 position, float rotation, Map &&map)
-	:RobotBase(*this), 
-	position(position.x, position.y), 
+RemoteRobot::RemoteRobot(DirectX::XMFLOAT3 position, float rotation)
+	:RobotBase(*this),
+	position(position.x, position.y),
 	rotation(rotation),
 	action(Action::NONE),
 	time(static_cast<float>(Utilities::GetTime())),
-	map(std::forward<Map>(map))
+	port("COM1")
 {
 
 }
 
-IncomingData MockRobot::GetData()
+IncomingData RemoteRobot::GetData()
 {
 	auto till = Utilities::GetTime() + 0.0016;
 	IncomingData ret;
@@ -30,13 +30,9 @@ IncomingData MockRobot::GetData()
 		ret.robotPosition = position;
 		ret.robotRotation = rotation;
 
-		auto worldMatrix = XMMatrixTranslation(position.x, position.y, 0.0f);
-		auto beam = XMVectorSet(0.0f, 2000.0f, 0.0f, 0.0f);
-
-		ret.data[0] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(rotation + 0.261799f) * worldMatrix)));//15 left
-		ret.data[1] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(rotation - 0.261799f) * worldMatrix)));//15 right
-		//ret.data[2] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(rotation + 0.698131f) * worldMatrix)));//40 left
-		//ret.data[3] = map.GetCollision(Map::Line(position, XMVector3Transform(beam, XMMatrixRotationZ(rotation - 0.698131f) * worldMatrix)));//40 right
+		auto data = port.Read();
+		ret.data[0] = XMFLOAT2(cos(0.261799f) * data.Sensors[0], sin(0.261799f) * data.Sensors[0]);
+		ret.data[1] = XMFLOAT2(cos(-0.261799f) * data.Sensors[1], sin(-0.261799f) * data.Sensors[1]);
 	}
 
 	while (till > Utilities::GetTime());
@@ -44,7 +40,7 @@ IncomingData MockRobot::GetData()
 	return ret;
 }
 
-void MockRobot::Update()
+void RemoteRobot::Update()
 {
 	Lock lock(mutex);
 
@@ -77,14 +73,15 @@ void MockRobot::Update()
 	time = now;
 }
 
-void MockRobot::Update(Action newAction)
+void RemoteRobot::Update(Action newAction)
 {
 	Lock lock(mutex);
+	port.Write(InputFromAction(newAction));
 	Update();
 	action = newAction;
 }
 
-void MockRobot::SetDirection(DirectX::XMFLOAT2 dir)
+void RemoteRobot::SetDirection(DirectX::XMFLOAT2 dir)
 {
 	Action newAction;
 
@@ -111,4 +108,43 @@ void MockRobot::SetDirection(DirectX::XMFLOAT2 dir)
 		}
 	}
 	Update(newAction);
+}
+
+RobotInput RemoteRobot::InputFromAction(Action action)
+{
+	RobotInput ret;
+	switch (action)
+	{
+	case RemoteRobot::NONE:
+		ret.DirectionL = 0;
+		ret.DirectionR = 0;
+		ret.PowerL = 0;
+		ret.PowerR = 0;
+		break;
+	case RemoteRobot::FORWARD:
+		ret.DirectionL = 0;
+		ret.DirectionR = 0;
+		ret.PowerL = 7;
+		ret.PowerR = 7;
+		break;
+	case RemoteRobot::BACKWARD:
+		ret.DirectionL = 1;
+		ret.DirectionR = 1;
+		ret.PowerL = 7;
+		ret.PowerR = 7;
+		break;
+	case RemoteRobot::LEFT:
+		ret.DirectionL = 1;
+		ret.DirectionR = 0;
+		ret.PowerL = 7;
+		ret.PowerR = 7;
+		break;
+	case RemoteRobot::RIGHT:
+		ret.DirectionL = 0;
+		ret.DirectionR = 1;
+		ret.PowerL = 7;
+		ret.PowerR = 7;
+		break;
+	}
+	return ret;
 }

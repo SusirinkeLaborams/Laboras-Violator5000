@@ -60,6 +60,12 @@
     <ClCompile Include="Utilities\ComPort.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Robotinterface\RemoteRobot.cpp">
+      <Filter>RobotInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotInterface\Interface.cpp">
+      <Filter>RobotInterface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\D3D11GraphicsContextHelpers.inl">
@@ -123,6 +129,9 @@
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="RobotInterface\RemoteRobot.h">
+      <Filter>RobotInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotInterface\Interface.h">
       <Filter>RobotInterface</Filter>
     </ClInclude>
   </ItemGroup>
