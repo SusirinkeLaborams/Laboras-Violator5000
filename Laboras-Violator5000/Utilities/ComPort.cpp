@@ -1,67 +1,85 @@
 #include "PrecompiledHeader.h"
 #include "ComPort.h"
 #include "Core\Settings.h"
+#include "Utilities\Utilities.h"
 
-ComPort::ComPort()
+ComPort::ComPort() :
+	m_Running(true),
+	m_HasDataToRead(false),
+	m_HasDataToWrite(false)
 {
-	Open();
-}
+	m_Handle = CreateFileW(Settings::RobotConstants::kComPortName.c_str(), GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING,	FILE_FLAG_NO_BUFFERING | FILE_FLAG_OVERLAPPED, nullptr);
+	Assert(m_Handle != INVALID_HANDLE_VALUE);
 
-
-ComPort::~ComPort()
-{
-	Close();
-}
-
-void ComPort::Open()
-{
-	handle = CreateFileW(
-		Settings::RobotConstants::kComPortName.c_str(),
-		GENERIC_READ | GENERIC_WRITE,
-		0,
-		NULL,
-		OPEN_EXISTING,
-		FILE_FLAG_NO_BUFFERING,
-		NULL);
-
-	open = (handle != INVALID_HANDLE_VALUE);
-	Assert(open);
-	
 	DCB dcb;
-	int result = GetCommState(handle, &dcb);
+	auto result = GetCommState(m_Handle, &dcb);
 	Assert(result);
-		
+
 	dcb.BaudRate = CBR_9600;
 	dcb.ByteSize = 8;
 	dcb.StopBits = ONESTOPBIT;
 	dcb.Parity = NOPARITY;
-	result = SetCommState(handle, &dcb);
+
+	result = SetCommState(m_Handle, &dcb);
 	Assert(result);
-	Sleep(2000);
-}
 
-void ComPort::Close()
-{
-	if (open)
+	m_ReadEvent = CreateEventW(nullptr, TRUE, FALSE, nullptr);
+	Assert(m_ReadEvent != nullptr);
+
+	m_StartTime = static_cast<float>(Utilities::GetTime());
+
+	m_ReadingThread = std::thread([this]()
 	{
-		CloseHandle(handle);
-		open = false;
-	}
+		ReadWorker();
+	});
+
+	m_WritingThread = std::thread([this]()
+	{
+		WriteWorker();
+	});
 }
 
-RobotOutput ComPort::Read()
+ComPort::~ComPort()
 {
-	//fail if closed
-	Assert(open);
+	m_Running = false;
+	m_ReadingThread.join();
+	m_WritingThread.join();
+}
+
+static bool ReadFileWithTimeout(HANDLE fileHandle, void* buffer, DWORD bytesToRead, OVERLAPPED& overlappedReader)
+{
+	const int kReadTimeOutInMilliseconds = 200;
+
+	DWORD bytesRead;
+	auto result = ReadFile(fileHandle, buffer, bytesToRead, nullptr, &overlappedReader);
+	Assert(result == FALSE);
+	Assert(GetLastError() == ERROR_IO_PENDING);
+
+	if (WaitForSingleObject(overlappedReader.hEvent, kReadTimeOutInMilliseconds) != WAIT_OBJECT_0)
+	{
+		result = CancelIoEx(fileHandle, &overlappedReader);
+	}
+
+	ResetEvent(overlappedReader.hEvent);
+	result = GetOverlappedResult(fileHandle, &overlappedReader, &bytesRead, FALSE);
+
+	if (result == FALSE)
+	{
+		return false;
+	}
+
+	Assert(bytesRead == bytesToRead);
+	return true;
+}
+
+void ComPort::ReadWorker()
+{
+	OVERLAPPED overlappedReader = { 0 };
+	overlappedReader.hEvent = CreateEventW(nullptr, TRUE, FALSE, nullptr);
 
 	RobotOutput data;
 
-	int bytesRead = 0;
-	DWORD dwRead;
-
-	BOOL result;
-
-	while (true)
+	while (m_Running)
 	{
 		int matchingMagicBytes = 0;
 
@@ -69,9 +87,10 @@ RobotOutput ComPort::Read()
 		{
 			uint8_t byte;
 
-			result = ReadFile(handle, &byte, sizeof(byte), &dwRead, NULL);
-			Assert(result);
-			Assert(dwRead == sizeof(byte));
+			if (!ReadFileWithTimeout(m_Handle, &byte, sizeof(byte), overlappedReader))
+			{
+				continue;
+			}
 
 			if (byte == (RobotOutput::MagicBytes >> (8 * matchingMagicBytes)) % (1 << 8))
 			{
@@ -83,28 +102,87 @@ RobotOutput ComPort::Read()
 				matchingMagicBytes = 0;
 			}
 		}
-		
+
 		auto bytesToRead = sizeof(data) - sizeof(data.Magic);
 		auto dataPtr = reinterpret_cast<uint8_t*>(&data) + sizeof(data.Magic);
 
-		result = ReadFile(handle, dataPtr, bytesToRead, &dwRead, NULL);
-		Assert(result);
-		Assert(dwRead == bytesToRead);
+		if (!ReadFileWithTimeout(m_Handle, dataPtr, bytesToRead, overlappedReader))
+		{
+			continue;
+		}
 
 		if (data.Hash == RobotOutput::CalculateHash(data))
-			break;
+		{
+			CriticalSection::Lock lock(m_ReadCriticalSection);
+			m_HasDataToRead = true;
+			m_ReadBuffer = data;
+		}
 	}
 
-	return data;
+	CloseHandle(overlappedReader.hEvent);
+}
+
+void ComPort::WriteWorker()
+{
+	const int kWriteTimeOutInMIlliseconds = 500;
+	DWORD bytesWritten;
+	OVERLAPPED overlappedWriter = { 0 };
+	overlappedWriter.hEvent = CreateEventW(nullptr, TRUE, FALSE, nullptr);
+
+	while (m_Running)
+	{
+		if (m_HasDataToWrite)
+		{
+			RobotInput dataToWrite;
+
+			{
+				CriticalSection::Lock lock(m_WriteCriticalSection);
+				dataToWrite = m_WriteBuffer;
+			}
+
+			auto result = WriteFile(m_Handle, &m_WriteBuffer, sizeof(m_WriteBuffer), nullptr, &overlappedWriter);
+			Assert(result == FALSE);
+			Assert(GetLastError() == ERROR_IO_PENDING);
+
+			if (WaitForSingleObject(overlappedWriter.hEvent, kWriteTimeOutInMIlliseconds) != WAIT_OBJECT_0)
+			{
+				result = CancelIoEx(m_Handle, &overlappedWriter);
+			}
+
+			ResetEvent(overlappedWriter.hEvent);
+			result = GetOverlappedResult(m_Handle, &overlappedWriter, &bytesWritten, FALSE);
+
+			if (result != FALSE)
+			{
+				Assert(bytesWritten == sizeof(m_WriteBuffer));
+			}
+
+			m_HasDataToWrite = false;
+		}
+
+		Sleep(static_cast<DWORD>(Settings::RobotConstants::kWriteCooldown * 1000.0f));
+	}
+
+	CloseHandle(overlappedWriter.hEvent);
+}
+
+bool ComPort::Read(RobotOutput& data)
+{
+	CriticalSection::Lock lock(m_ReadCriticalSection);
+
+	if (!m_HasDataToRead)
+	{
+		return false;
+	}
+
+	data = m_ReadBuffer;
+	m_HasDataToRead = false;
+	return true;	
 }
 
 void ComPort::Write(const RobotInput &data)
 {
-	Assert(open);
-
-	DWORD written;
-
-	auto result = WriteFile(handle, &data, sizeof(data), &written, NULL);
-	Assert(result);
-	Assert(written == sizeof(data));
+	CriticalSection::Lock lock(m_WriteCriticalSection);
+	m_WriteBuffer = data;
+	m_HasDataToWrite = true;
 }

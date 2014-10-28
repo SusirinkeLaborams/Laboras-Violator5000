@@ -34,12 +34,11 @@ IncomingData RemoteRobot::GetData()
 	}
 
 	auto currentTime = static_cast<float>(Utilities::GetTime());
-	if (m_LastReceivedTime + Settings::RobotConstants::kReadCooldown < currentTime)
-	{
-		auto data = m_ComPort.Read();
-		auto time = static_cast<float>(Utilities::GetTime());
-		m_LastReceivedTime = currentTime;
 
+	RobotOutput data;
+
+	if (m_ComPort.Read(data))
+	{
 		float distance[kSensorCount];
 
 		for (int i = 0; i < kSensorCount; i++)
@@ -50,6 +49,7 @@ IncomingData RemoteRobot::GetData()
 		Assert(kSensorCount == 2);
 		ret.data[0] = XMFLOAT2(m_Position.x - sin(m_Rotation + 0.261799f) * distance[0], m_Position.y + cos(m_Rotation + 0.261799f) * distance[0]);
 		ret.data[1] = XMFLOAT2(m_Position.x - sin(m_Rotation - 0.261799f) * distance[1], m_Position.y + cos(m_Rotation - 0.261799f) * distance[1]);
+
 	}
 	else
 	{
