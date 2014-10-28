@@ -25,7 +25,7 @@ private:
 	CriticalSection m_CriticalSection;
 	DirectX::XMFLOAT3 m_RobotPosition;
 	float m_RobotRotation;
-	MockRobot m_Robot;
+	RemoteRobot m_Robot;
 	std::vector<DirectX::XMFLOAT2> m_SensorData;
 
 	void UpdateAndDraw();

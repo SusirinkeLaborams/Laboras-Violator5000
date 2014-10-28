@@ -16,8 +16,18 @@ public:
 
 struct RobotOutput {
 public:
-    static const uint8_t MagicByte = 255;
-	uint8_t Magic;
-	uint8_t Hash;
+    static const uint32_t MagicBytes = 2564348594;
+	uint32_t Magic;
 	uint32_t Sensors[SensorCount];
+	uint32_t Hash;
 };
+
+inline uint32_t Hash(const RobotOutput& e)
+{
+	uint32_t hash = 0;
+	for (int i = 0; i < SensorCount; i++)
+	{
+		hash ^= e.Sensors[i];
+	}
+	return hash;
+}

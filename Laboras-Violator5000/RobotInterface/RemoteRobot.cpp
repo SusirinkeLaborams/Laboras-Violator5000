@@ -13,14 +13,13 @@ RemoteRobot::RemoteRobot(DirectX::XMFLOAT3 position, float rotation)
 	rotation(rotation),
 	action(Action::NONE),
 	time(static_cast<float>(Utilities::GetTime())),
-	port("COM1")
+	port("COM3")
 {
 
 }
 
 IncomingData RemoteRobot::GetData()
 {
-	auto till = Utilities::GetTime() + 0.0016;
 	IncomingData ret;
 
 	{
@@ -31,11 +30,18 @@ IncomingData RemoteRobot::GetData()
 		ret.robotRotation = rotation;
 
 		auto data = port.Read();
-		ret.data[0] = XMFLOAT2(cos(0.261799f) * data.Sensors[0], sin(0.261799f) * data.Sensors[0]);
-		ret.data[1] = XMFLOAT2(cos(-0.261799f) * data.Sensors[1], sin(-0.261799f) * data.Sensors[1]);
-	}
+		
+		float distance[SensorCount];
 
-	while (till > Utilities::GetTime());
+		for (int i = 0; i < SensorCount; i++)
+		{
+			distance[i] = data.Sensors[i] / 58.0f;
+		}
+
+		Assert(SensorCount == 2);
+		ret.data[0] = XMFLOAT2(-sin(0.261799f) * distance[0], cos(0.261799f) * distance[0]);
+		ret.data[1] = XMFLOAT2(-sin(-0.261799f) * distance[1], cos(-0.261799f) * distance[1]);
+	}
 
 	return ret;
 }

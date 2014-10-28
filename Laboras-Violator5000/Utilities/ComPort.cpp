@@ -5,7 +5,6 @@ ComPort::ComPort(std::string name)
 	:name(name)
 {
 	Open();
-	bytesToRead = sizeof(uint8_t) * SensorCount;
 }
 
 
@@ -58,30 +57,37 @@ RobotOutput ComPort::Read()
 	int bytesRead = 0;
 	DWORD dwRead;
 
-	byte buff;
 	BOOL result;
 
 	while (true)
 	{
-		while (true)
+		int matchingMagicBytes = 0;
+
+		while (matchingMagicBytes < sizeof(data.Magic))
 		{
-			result = ReadFile(handle, &buff, sizeof(byte), &dwRead, NULL);
+			uint8_t byte;
+
+			result = ReadFile(handle, &byte, sizeof(byte), &dwRead, NULL);
 			Assert(result);
 			Assert(dwRead == sizeof(byte));
-			if (buff == RobotOutput::MagicByte)
-				break;
-		}
 
-		result = ReadFile(handle, &data.Hash, sizeof(byte), &dwRead, NULL);
+			if (byte == (RobotOutput::MagicBytes >> (8 * matchingMagicBytes)) % (1 << 8))
+			{
+				*(reinterpret_cast<uint8_t*>(&data.Magic) + matchingMagicBytes) = byte;
+				matchingMagicBytes++;
+			}
+			else
+			{
+				matchingMagicBytes = 0;
+			}
+		}
+		
+		auto bytesToRead = sizeof(data) - sizeof(data.Magic);
+		auto dataPtr = reinterpret_cast<uint8_t*>(&data) + sizeof(data.Magic);
+
+		result = ReadFile(handle, dataPtr, bytesToRead, &dwRead, NULL);
 		Assert(result);
-		Assert(dwRead == sizeof(byte));
-
-		for (int i = 0; i < bytesToRead; i++)
-		{
-			result = ReadFile(handle, &data.Sensors + i, sizeof(byte), &dwRead, NULL);
-			Assert(result);
-			Assert(dwRead == sizeof(byte));
-		}
+		Assert(dwRead == bytesToRead);
 
 		if (data.Hash == Hash(data))
 			break;

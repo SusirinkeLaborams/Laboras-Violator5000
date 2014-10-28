@@ -55,16 +55,6 @@ public:
 	}
 };
 
-uint8_t Hash(RobotOutput e)
-{
-	uint8_t hash = 0;
-	for (int i = 0; i < SensorCount; i++)
-	{
-		hash ^= e.Sensors[i];
-	}
-	return hash;
-}
-
 Engine Engines[2];
 const int EngineCount = 2;
 
@@ -83,10 +73,11 @@ void setup()
 void loop()
 {
 	RobotOutput o;
-	o.Magic = RobotOutput::MagicByte;
+	o.Magic = RobotOutput::MagicBytes;
 	o.Sensors[0] = Sensors[0].GetDistance();
 	o.Sensors[1] = Sensors[1].GetDistance();
 	o.Hash = Hash(o);
+
 	Serial.write((char*)&o, sizeof(o));
 }
 
