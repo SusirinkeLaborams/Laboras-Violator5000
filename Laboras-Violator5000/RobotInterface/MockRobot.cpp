@@ -7,13 +7,13 @@ using namespace DirectX;
 const float MockRobot::velocity = 30.0f;
 const float MockRobot::angular = 1.0f;
 
-MockRobot::MockRobot(DirectX::XMFLOAT3 position, float rotation, Map &&map)
+MockRobot::MockRobot(DirectX::XMFLOAT3 position, float rotation)
 	:RobotBase(*this), 
 	position(position.x, position.y), 
 	rotation(rotation),
 	action(Action::NONE),
 	time(static_cast<float>(Utilities::GetTime())),
-	map(std::forward<Map>(map))
+	map(Map::CreateSomeMap())
 {
 
 }
