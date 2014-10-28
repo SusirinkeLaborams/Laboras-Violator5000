@@ -2,7 +2,7 @@
 #include "RobotBase.h"
 #include "Utilities\ComPort.h"
 
-class RemoteRobot : RobotBase < RemoteRobot >
+class RemoteRobot : public RobotBase < RemoteRobot >
 {
 	enum Action
 	{

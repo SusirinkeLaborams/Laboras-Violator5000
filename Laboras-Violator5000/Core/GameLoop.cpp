@@ -10,7 +10,7 @@ GameLoop::GameLoop() :
 	m_Camera(static_cast<float>(m_Window.GetWidth()) / static_cast<float>(m_Window.GetHeight())),
 	m_RobotPosition(0.0f, 0.0f, 0.0f),
 	m_RobotRotation(0.0f),
-	m_Robot(m_RobotPosition, m_RobotRotation, Map::CreateSomeMap())
+	m_Robot(m_RobotPosition, m_RobotRotation)
 {
 	m_Robot.GetReceiver().StartReceiving([this](const IncomingData& data)
 	{
