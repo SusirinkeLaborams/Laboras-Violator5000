@@ -73,9 +73,9 @@ void serialEvent()
 		Serial.readBytes((char*) &input, 1);
 		
 		Engines[0].SetDirection(input.DirectionL);
-		Engines[0].SetSpeed(input.PowerL * 30);
+		Engines[0].SetSpeed(input.PowerL * 36);
 		Engines[1].SetDirection(input.DirectionR);
-		Engines[1].SetSpeed(input.PowerR * 30);
+		Engines[1].SetSpeed(input.PowerR * 36);
 	}
 }
 
