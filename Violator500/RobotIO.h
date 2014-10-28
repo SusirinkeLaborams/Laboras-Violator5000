@@ -19,5 +19,5 @@ public:
     static const uint8_t MagicByte = 255;
 	uint8_t Magic;
 	uint8_t Hash;
-	uint8_t Sensors[SensorCount];
+	uint32_t Sensors[SensorCount];
 };

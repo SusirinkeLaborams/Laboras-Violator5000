@@ -1,16 +1,21 @@
 #include "RobotIO.h"
+
 class Sensor {
 private:
 	int m_InputPin;
 	int m_OutputPin;
 public:
-	Sensor(int input, int output) : m_InputPin(input), m_OutputPin(output)
+	Sensor()
+	{
+	}
+
+	Sensor(int trig, int echo) : m_InputPin(trig), m_OutputPin(echo)
 	{
 		pinMode(m_InputPin, INPUT);
 		pinMode(m_OutputPin, OUTPUT);
 	}
 
-	int16_t GetDistance()
+	uint32_t GetDistance()
 	{
 		digitalWrite(m_OutputPin, LOW);
 		delayMicroseconds(2);
@@ -50,19 +55,39 @@ public:
 	}
 };
 
+uint8_t Hash(RobotOutput e)
+{
+	uint8_t hash = 0;
+	for (int i = 0; i < SensorCount; i++)
+	{
+		hash ^= e.Sensors[i];
+	}
+	return hash;
+}
+
 Engine Engines[2];
 const int EngineCount = 2;
+
+Sensor Sensors[2];
 void setup()
 {
 	Engines[0] = Engine(4, 5);
 	Engines[1] = Engine(7, 6);
 	
+	Sensors[0] = Sensor(13, 12);
+	Sensors[1] = Sensor(11, 10);
 	Serial.begin(9600);	
 }
 
 
 void loop()
 {
+	RobotOutput o;
+	o.Magic = RobotOutput::MagicByte;
+	o.Sensors[0] = Sensors[0].GetDistance();
+	o.Sensors[1] = Sensors[1].GetDistance();
+	o.Hash = Hash(o);
+	Serial.write((char*)&o, sizeof(o));
 }
 
 void serialEvent()
