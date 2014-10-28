@@ -96,9 +96,9 @@ void ComPort::ReadWorker()
 
 		while (matchingMagicBytes < sizeof(data.Magic))
 		{
-			uint64_t byte = 0;
+			uint8_t byte = 0;
 
-			if (!ReadFileWithTimeout(m_Handle, &byte, 8))
+			if (!ReadFileWithTimeout(m_Handle, &byte, 1))
 			{
 				continue;
 			}
