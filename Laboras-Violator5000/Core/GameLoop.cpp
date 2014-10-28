@@ -79,7 +79,27 @@ void GameLoop::Update()
 	}
 
 	UpdateRobotData();
-	m_Robot.SetDirection(movementVector);
+
+	if (movementVector.y > 0.1f)
+	{
+		m_Robot.SetAction(RemoteRobot::Action::FORWARD);
+	}
+	else if (movementVector.y < -0.1f)
+	{
+		m_Robot.SetAction(RemoteRobot::Action::BACKWARD);
+	}
+	else if (movementVector.x < -0.1f)
+	{
+		m_Robot.SetAction(RemoteRobot::Action::LEFT);
+	}
+	else if (movementVector.x > 0.1f)
+	{
+		m_Robot.SetAction(RemoteRobot::Action::RIGHT);
+	}
+	else
+	{
+		m_Robot.SetAction(RemoteRobot::Action::NONE);
+	}
 }
 
 void GameLoop::UpdateRobotData()

@@ -5,7 +5,6 @@
 #include "Graphics\OrthographicCamera.h"
 #include "Graphics\Tank.h"
 #include "NonCopyable.h"
-#include "RobotInterface\MockRobot.h"
 #include "RobotInterface\RemoteRobot.h"
 #include "Utilities\CriticalSection.h"
 #include "Window.h"

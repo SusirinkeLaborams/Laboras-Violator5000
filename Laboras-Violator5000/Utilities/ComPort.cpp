@@ -1,8 +1,8 @@
 #include "PrecompiledHeader.h"
 #include "ComPort.h"
+#include "Core\Settings.h"
 
-ComPort::ComPort(std::string name)
-	:name(name)
+ComPort::ComPort()
 {
 	Open();
 }
@@ -15,8 +15,8 @@ ComPort::~ComPort()
 
 void ComPort::Open()
 {
-	handle = CreateFileA(
-		name.c_str(),
+	handle = CreateFileW(
+		Settings::RobotConstants::kComPortName.c_str(),
 		GENERIC_READ | GENERIC_WRITE,
 		0,
 		NULL,

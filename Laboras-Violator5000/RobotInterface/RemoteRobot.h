@@ -1,36 +1,55 @@
 #pragma once
-#include "RobotBase.h"
-#include "Utilities\ComPort.h"
 
-class RemoteRobot : public RobotBase < RemoteRobot >
+#include "RobotBase.h"
+
+#if !USE_MOCK_ROBOT
+#include "Utilities\ComPort.h"
+#else
+#include "MockComPort.h"
+using ComPort = MockComPort;
+#endif
+
+class RemoteRobot : public RobotBase<RemoteRobot>
 {
+public:
 	enum Action
 	{
 		NONE,
 		FORWARD,
 		BACKWARD,
 		LEFT,
-		RIGHT
+		RIGHT,
+		ACTION_COUNT
 	};
 
 private:
-	static const float velocity;
-	static const float angular;
+	struct ActionTimer
+	{
+		float startTime;
+		float endTime;
+	};
 
-	DirectX::XMFLOAT2 position;
-	float rotation;
-	Action action;
-	float time;
-	ComPort port;
+	ActionTimer m_Timers[Action::ACTION_COUNT];
+	Action m_LocalAction;
+	Action m_RemoteAction;
+	float m_LastUpdateTime;
 
-	//methods
-	static RobotInput InputFromAction(Action action);
-protected:
+	DirectX::XMFLOAT2 m_Position;
+	float m_Rotation;
+
+	ComPort m_ComPort;
+
+	void SendCommand(Action action);
+	void SimulateAction(Action action, float duration);
 	void Update();
-	void Update(Action action);
+	void UpdateActions();
 
 public:
 	RemoteRobot(DirectX::XMFLOAT3 position, float rotation);
+
 	IncomingData GetData();
-	void SetDirection(DirectX::XMFLOAT2 dir);
+	void SetAction(Action action);
+
+	DirectX::XMFLOAT2 GetPosition() const { return m_Position; };
+	float GetRotation() const { return m_Rotation; };
 };

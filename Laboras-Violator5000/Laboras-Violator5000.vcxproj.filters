@@ -51,9 +51,6 @@
     <ClCompile Include="Graphics\Environment.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="RobotInterface\MockRobot.cpp">
-      <Filter>RobotInterface</Filter>
-    </ClCompile>
     <ClCompile Include="RobotInterface\Map.cpp">
       <Filter>RobotInterface</Filter>
     </ClCompile>
@@ -61,6 +58,9 @@
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Robotinterface\RemoteRobot.cpp">
+      <Filter>RobotInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotInterface\MockComPort.cpp">
       <Filter>RobotInterface</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,9 +110,6 @@
     <ClInclude Include="RobotInterface\RobotBase.h">
       <Filter>RobotInterface</Filter>
     </ClInclude>
-    <ClInclude Include="RobotInterface\MockRobot.h">
-      <Filter>RobotInterface</Filter>
-    </ClInclude>
     <ClInclude Include="RobotInterface\Map.h">
       <Filter>RobotInterface</Filter>
     </ClInclude>
@@ -126,6 +123,9 @@
       <Filter>RobotInterface</Filter>
     </ClInclude>
     <ClInclude Include="..\Violator500\RobotIO.h">
+      <Filter>RobotInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotInterface\MockComPort.h">
       <Filter>RobotInterface</Filter>
     </ClInclude>
   </ItemGroup>

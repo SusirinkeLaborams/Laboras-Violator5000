@@ -19,3 +19,5 @@
 #else
 #define Assert(x)
 #endif
+
+#define USE_MOCK_ROBOT 1

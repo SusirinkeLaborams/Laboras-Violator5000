@@ -1,156 +1,204 @@
 #include "PrecompiledHeader.h"
 #include "RemoteRobot.h"
+#include "Core\Settings.h"
 #include "Utilities\Utilities.h"
 
 using namespace DirectX;
 
-const float RemoteRobot::velocity = 30.0f;
-const float RemoteRobot::angular = 1.0f;
-
-RemoteRobot::RemoteRobot(DirectX::XMFLOAT3 position, float rotation)
-	:RobotBase(*this),
-	position(position.x, position.y),
-	rotation(rotation),
-	action(Action::NONE),
-	time(static_cast<float>(Utilities::GetTime())),
-	port("COM3")
+RemoteRobot::RemoteRobot(DirectX::XMFLOAT3 position, float rotation) :
+	RobotBase(*this),
+	m_Position(position.x, position.y),
+	m_Rotation(rotation),
+	m_LocalAction(Action::NONE),
+	m_RemoteAction(Action::NONE),
+	m_LastUpdateTime(static_cast<float>(Utilities::GetTime()))
+#if USE_MOCK_ROBOT
+	, m_ComPort(*this)
+#endif
 {
-
+	ZeroMemory(&m_Timers, sizeof(m_Timers));
 }
 
 IncomingData RemoteRobot::GetData()
 {
 	IncomingData ret;
+	Update();
 
 	{
 		Lock lock(mutex);
-		Update();
 
-		ret.robotPosition = position;
-		ret.robotRotation = rotation;
-
-		auto data = port.Read();
-		
-		float distance[kSensorCount];
-
-		for (int i = 0; i < kSensorCount; i++)
-		{
-			distance[i] = data.Sensors[i] / 58.0f;
-		}
-
-		Assert(kSensorCount == 2);
-		ret.data[0] = XMFLOAT2(-sin(0.261799f) * distance[0], cos(0.261799f) * distance[0]);
-		ret.data[1] = XMFLOAT2(-sin(-0.261799f) * distance[1], cos(-0.261799f) * distance[1]);
+		ret.robotPosition = m_Position;
+		ret.robotRotation = m_Rotation;
 	}
 
+	auto data = m_ComPort.Read();
+
+	float distance[kSensorCount];
+
+	for (int i = 0; i < kSensorCount; i++)
+	{
+		distance[i] = data.Sensors[i] / 58.0f;
+	}
+
+	Assert(kSensorCount == 2);
+	ret.data[0] = XMFLOAT2(m_Position.x - sin(m_Rotation + 0.261799f) * distance[0], m_Position.y + cos(m_Rotation + 0.261799f) * distance[0]);
+	ret.data[1] = XMFLOAT2(m_Position.x - sin(m_Rotation - 0.261799f) * distance[1], m_Position.y + cos(m_Rotation - 0.261799f) * distance[1]);
+
 	return ret;
+}
+
+static float GetStartTime(RemoteRobot::Action action)
+{
+	switch (action)
+	{
+	case RemoteRobot::Action::FORWARD:
+		return Settings::RobotConstants::EngineStartTime::kForward;
+
+	case RemoteRobot::Action::BACKWARD:
+		return Settings::RobotConstants::EngineStartTime::kBack;
+
+	case RemoteRobot::Action::LEFT:
+		return Settings::RobotConstants::EngineStartTime::kLeft;
+
+	case RemoteRobot::Action::RIGHT:
+		return Settings::RobotConstants::EngineStartTime::kRight;
+	}
+
+	return 0.0f;
+}
+
+static float GetStopTime(RemoteRobot::Action action)
+{
+	switch (action)
+	{
+	case RemoteRobot::Action::FORWARD:
+		return Settings::RobotConstants::EngineStopTime::kForward;
+
+	case RemoteRobot::Action::BACKWARD:
+		return Settings::RobotConstants::EngineStopTime::kBack;
+
+	case RemoteRobot::Action::LEFT:
+		return Settings::RobotConstants::EngineStopTime::kLeft;
+
+	case RemoteRobot::Action::RIGHT:
+		return Settings::RobotConstants::EngineStopTime::kRight;
+	}
+
+	return 0.0f;
 }
 
 void RemoteRobot::Update()
 {
-	Lock lock(mutex);
+	Action myAction;
 
-	auto now = static_cast<float>(Utilities::GetTime());
-	auto passed = now - time;
+	{
+		Lock lock(mutex);
+		UpdateActions();
 
-	if (action == Action::FORWARD)
-	{
-		auto matrix = XMMatrixRotationZ(rotation);
-		auto dir = XMVector3Transform(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), matrix);
-		auto pos = XMLoadFloat2(&position) + dir * (velocity * passed);
-		XMStoreFloat2(&position, pos);
-	}
-	else if (action == Action::BACKWARD)
-	{
-		auto matrix = XMMatrixRotationZ(rotation);
-		auto dir = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-		auto pos = XMLoadFloat2(&position) - XMVector3Transform(dir, matrix) * (velocity * passed);
-		XMStoreFloat2(&position, pos);
-	}
-	else if (action == Action::LEFT)
-	{
-		rotation += angular * passed;
-	}
-	else if (action == Action::RIGHT)
-	{
-		rotation -= angular * passed;
+		if (m_LocalAction != m_RemoteAction)
+		{
+			auto currentTime = static_cast<float>(Utilities::GetTime());
+			m_Timers[m_LocalAction].startTime = currentTime + GetStartTime(m_LocalAction);
+			m_Timers[m_LocalAction].endTime = currentTime + 10000.0f;	// Never end
+			m_Timers[m_RemoteAction].endTime = currentTime + GetStopTime(m_RemoteAction);
+
+			m_RemoteAction = m_LocalAction;
+		}
+
+		myAction = m_LocalAction;
 	}
 
-	time = now;
+	SendCommand(myAction);
 }
 
-void RemoteRobot::Update(Action newAction)
+void RemoteRobot::SetAction(Action action)
 {
 	Lock lock(mutex);
-	port.Write(InputFromAction(newAction));
-	Update();
-	action = newAction;
+	m_LocalAction = action;
 }
 
-void RemoteRobot::SetDirection(DirectX::XMFLOAT2 dir)
+void RemoteRobot::SendCommand(Action action)
 {
-	Action newAction;
+	RobotInput command;
 
-	//tingiu skaiciuot
-	if (Utilities::Vector2LengthSqr(dir) <= 0.01f)
-	{
-		newAction = Action::NONE;
-	}
-	else
-	{
-		if (abs(dir.y) > abs(dir.x))
-		{
-			if (dir.y > 0.0f)
-				newAction = Action::FORWARD;
-			else
-				newAction = Action::BACKWARD;
-		}
-		else
-		{
-			if (dir.x > 0.0f)
-				newAction = Action::RIGHT;
-			else
-				newAction = Action::LEFT;
-		}
-	}
-	Update(newAction);
-}
-
-RobotInput RemoteRobot::InputFromAction(Action action)
-{
-	RobotInput ret;
 	switch (action)
 	{
 	case RemoteRobot::NONE:
-		ret.DirectionL = 0;
-		ret.DirectionR = 0;
-		ret.PowerL = 0;
-		ret.PowerR = 0;
+		command.DirectionL = 0;
+		command.DirectionR = 0;
+		command.PowerL = 0;
+		command.PowerR = 0;
 		break;
 	case RemoteRobot::FORWARD:
-		ret.DirectionL = 0;
-		ret.DirectionR = 0;
-		ret.PowerL = 7;
-		ret.PowerR = 7;
+		command.DirectionL = 0;
+		command.DirectionR = 0;
+		command.PowerL = 7;
+		command.PowerR = 7;
 		break;
 	case RemoteRobot::BACKWARD:
-		ret.DirectionL = 1;
-		ret.DirectionR = 1;
-		ret.PowerL = 7;
-		ret.PowerR = 7;
+		command.DirectionL = 1;
+		command.DirectionR = 1;
+		command.PowerL = 7;
+		command.PowerR = 7;
 		break;
 	case RemoteRobot::LEFT:
-		ret.DirectionL = 1;
-		ret.DirectionR = 0;
-		ret.PowerL = 7;
-		ret.PowerR = 7;
+		command.DirectionL = 1;
+		command.DirectionR = 0;
+		command.PowerL = 7;
+		command.PowerR = 7;
 		break;
 	case RemoteRobot::RIGHT:
-		ret.DirectionL = 0;
-		ret.DirectionR = 1;
-		ret.PowerL = 7;
-		ret.PowerR = 7;
+		command.DirectionL = 0;
+		command.DirectionR = 1;
+		command.PowerL = 7;
+		command.PowerR = 7;
 		break;
 	}
-	return ret;
+
+	m_ComPort.Write(command);
+}
+
+void RemoteRobot::UpdateActions()
+{
+	auto currentTime = static_cast<float>(Utilities::GetTime());
+	auto deltaTime = currentTime - m_LastUpdateTime;
+
+	for (int i = Action::FORWARD; i < Action::ACTION_COUNT; i++)
+	{
+		if (m_Timers[i].startTime < currentTime && m_Timers[i].endTime > currentTime)
+		{
+			auto duration = min(m_Timers[i].endTime, currentTime) - max(m_Timers[i].startTime, m_LastUpdateTime);
+			SimulateAction(static_cast<Action>(i), duration);
+		}
+	}
+
+	m_LastUpdateTime = currentTime;
+}
+
+void RemoteRobot::SimulateAction(Action action, float duration)
+{
+	float distance;
+
+	switch (action)
+	{
+	case Action::FORWARD:
+		distance = Settings::RobotConstants::Speed::kForward * duration;
+		m_Position.x += -sin(m_Rotation) * distance;
+		m_Position.y += cos(m_Rotation) * distance;
+		break;
+
+	case Action::BACKWARD:
+		distance = Settings::RobotConstants::Speed::kForward * duration;
+		m_Position.x -= -sin(m_Rotation) * distance;
+		m_Position.y -= cos(m_Rotation) * distance;
+		break;
+
+	case Action::LEFT:
+		m_Rotation += Settings::RobotConstants::Speed::kLeft * duration;
+		break;
+
+	case Action::RIGHT:
+		m_Rotation -= Settings::RobotConstants::Speed::kRight * duration;
+		break;
+	}
 }

@@ -13,4 +13,33 @@ namespace Settings
 	extern const float kPathTracingDecayTime;
 
 	extern const int kMultisampling;
+
+	namespace RobotConstants
+	{
+		extern const std::wstring kComPortName;
+
+		namespace EngineStartTime
+		{
+			extern const float kForward;
+			extern const float kBack;
+			extern const float kLeft;
+			extern const float kRight;
+		}
+
+		namespace EngineStopTime
+		{
+			extern const float kForward;
+			extern const float kBack;
+			extern const float kLeft;
+			extern const float kRight;
+		}
+
+		namespace Speed
+		{
+			extern const float kForward;
+			extern const float kBack;
+			extern const float kLeft;
+			extern const float kRight;
+		}
+	}
 }
