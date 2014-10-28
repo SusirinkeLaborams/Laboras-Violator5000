@@ -30,10 +30,10 @@ const float Settings::RobotConstants::EngineStopTime::kLeft = 0.4f;
 const float Settings::RobotConstants::EngineStopTime::kRight = 0.4f;
 
 // Speed
-const float Settings::RobotConstants::Speed::kForward = 20.0f;
-const float Settings::RobotConstants::Speed::kBack = 20.0f;
-const float Settings::RobotConstants::Speed::kLeft = DirectX::XM_PI / 4.0f;
-const float Settings::RobotConstants::Speed::kRight = DirectX::XM_PI / 4.0f;
+const float Settings::RobotConstants::Speed::kForward = 28.76f;
+const float Settings::RobotConstants::Speed::kBack = 28.76f;
+const float Settings::RobotConstants::Speed::kLeft = 1.03f;
+const float Settings::RobotConstants::Speed::kRight = 1.55f;
 
 const float Settings::RobotConstants::kReadCooldown = 0.2f;
 const float Settings::RobotConstants::kWriteCooldown = 0.032f;
