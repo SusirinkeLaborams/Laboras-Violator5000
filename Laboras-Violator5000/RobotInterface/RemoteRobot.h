@@ -29,6 +29,9 @@ private:
 		float endTime;
 	};
 
+	float m_LastSentTime;
+	float m_LastReceivedTime;
+
 	ActionTimer m_Timers[Action::ACTION_COUNT];
 	Action m_LocalAction;
 	Action m_RemoteAction;

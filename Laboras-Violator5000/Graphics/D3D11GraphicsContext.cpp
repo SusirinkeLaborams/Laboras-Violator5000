@@ -4,6 +4,7 @@
 #include "D3D11GraphicsContext.h"
 
 using namespace std;
+using namespace Microsoft::WRL;
 
 D3D11GraphicsContext* D3D11GraphicsContext::s_Instance;
 

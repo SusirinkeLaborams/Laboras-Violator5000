@@ -21,21 +21,23 @@ void ComPort::Open()
 		0,
 		NULL,
 		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING,
+		FILE_FLAG_NO_BUFFERING,
 		NULL);
 
 	open = (handle != INVALID_HANDLE_VALUE);
-
-	if (open)
-	{
-		DCB dcb;
-		ZeroMemory(&dcb, sizeof(dcb));
-		dcb.BaudRate = CBR_9600;
-		dcb.ByteSize = 8;
-		dcb.StopBits = ONESTOPBIT;
-		dcb.Parity = NOPARITY;
-		SetCommState(handle, &dcb);
-	}
+	Assert(open);
+	
+	DCB dcb;
+	int result = GetCommState(handle, &dcb);
+	Assert(result);
+		
+	dcb.BaudRate = CBR_9600;
+	dcb.ByteSize = 8;
+	dcb.StopBits = ONESTOPBIT;
+	dcb.Parity = NOPARITY;
+	result = SetCommState(handle, &dcb);
+	Assert(result);
+	Sleep(2000);
 }
 
 void ComPort::Close()

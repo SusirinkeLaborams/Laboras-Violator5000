@@ -7,6 +7,7 @@ namespace Settings
 	extern const int kWidth;
 	extern const int kHeight;
 	extern const bool kFullscreen;
+	extern const bool kWindowMovable;
 
 	extern const float kCentimetersInWindowHeight;
 	extern const int kPathTracingBufferSize;
@@ -41,5 +42,8 @@ namespace Settings
 			extern const float kLeft;
 			extern const float kRight;
 		}
+
+		extern const float kReadCooldown;
+		extern const float kWriteCooldown;
 	}
 }

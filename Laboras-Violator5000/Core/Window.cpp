@@ -78,7 +78,13 @@ void Window::CreateWin32Window()
 		posY = (GetSystemMetrics(SM_CYSCREEN) - m_Height) / 2;
 	}
 
-	m_WindowHandle = CreateWindowEx(WS_EX_APPWINDOW, windowInfo.lpszClassName, windowInfo.lpszClassName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+	auto windowStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
+	if (!Settings::kWindowMovable)
+	{
+		windowStyle |= WS_POPUP;
+	}
+
+	m_WindowHandle = CreateWindowEx(WS_EX_APPWINDOW, windowInfo.lpszClassName, windowInfo.lpszClassName, windowStyle,
 		posX, posY, m_Width, m_Height, nullptr, nullptr, m_ProgramInstance, this);
 	Assert(m_WindowHandle != nullptr);
 

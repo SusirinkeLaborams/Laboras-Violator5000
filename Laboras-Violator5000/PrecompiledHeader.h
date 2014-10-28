@@ -20,4 +20,4 @@
 #define Assert(x)
 #endif
 
-#define USE_MOCK_ROBOT 1
+#define USE_MOCK_ROBOT 0
