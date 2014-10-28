@@ -31,14 +31,14 @@ IncomingData RemoteRobot::GetData()
 
 		auto data = port.Read();
 		
-		float distance[SensorCount];
+		float distance[kSensorCount];
 
-		for (int i = 0; i < SensorCount; i++)
+		for (int i = 0; i < kSensorCount; i++)
 		{
 			distance[i] = data.Sensors[i] / 58.0f;
 		}
 
-		Assert(SensorCount == 2);
+		Assert(kSensorCount == 2);
 		ret.data[0] = XMFLOAT2(-sin(0.261799f) * distance[0], cos(0.261799f) * distance[0]);
 		ret.data[1] = XMFLOAT2(-sin(-0.261799f) * distance[1], cos(-0.261799f) * distance[1]);
 	}

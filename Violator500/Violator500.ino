@@ -76,7 +76,7 @@ void loop()
 	o.Magic = RobotOutput::MagicBytes;
 	o.Sensors[0] = Sensors[0].GetDistance();
 	o.Sensors[1] = Sensors[1].GetDistance();
-	o.Hash = Hash(o);
+	o.Hash = RobotOutput::CalculateHash(o);
 
 	Serial.write((char*)&o, sizeof(o));
 }

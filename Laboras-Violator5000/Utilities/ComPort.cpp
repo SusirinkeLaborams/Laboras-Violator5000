@@ -89,7 +89,7 @@ RobotOutput ComPort::Read()
 		Assert(result);
 		Assert(dwRead == bytesToRead);
 
-		if (data.Hash == Hash(data))
+		if (data.Hash == RobotOutput::CalculateHash(data))
 			break;
 	}
 
