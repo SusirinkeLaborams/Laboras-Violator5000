@@ -29,3 +29,13 @@ public:
 	float robotRotation;
 	DirectX::XMFLOAT2 data[kSensorCount];
 };
+
+inline uint32_t Hash(const RobotOutput& e)
+{
+	uint32_t hash = 0;
+	for (int i = 0; i < SensorCount; i++)
+	{
+		hash ^= e.Sensors[i];
+	}
+	return hash;
+}

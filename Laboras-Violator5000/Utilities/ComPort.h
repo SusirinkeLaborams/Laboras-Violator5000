@@ -6,7 +6,7 @@ private:
 	HANDLE handle;
 	bool open;
 	std::string name;
-	int bytesToRead;
+
 public:
 	void Open();
 	void Close();

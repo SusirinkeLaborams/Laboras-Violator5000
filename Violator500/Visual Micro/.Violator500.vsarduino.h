@@ -39,7 +39,6 @@
 typedef unsigned char byte;
 extern "C" void __cxa_pure_virtual() {;}
 
-uint8_t Hash(RobotOutput e);
 //
 //
 void serialEvent();
