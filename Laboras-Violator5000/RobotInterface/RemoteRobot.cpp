@@ -30,9 +30,13 @@ IncomingData RemoteRobot::GetData()
 		ret.robotPosition = position;
 		ret.robotRotation = rotation;
 
-		auto data = port.Read();
-		ret.data[0] = XMFLOAT2(cos(0.261799f) * data.Sensors[0], sin(0.261799f) * data.Sensors[0]);
-		ret.data[1] = XMFLOAT2(cos(-0.261799f) * data.Sensors[1], sin(-0.261799f) * data.Sensors[1]);
+		
+		if (port.IsOpen())
+		{
+			auto data = port.Read();
+			ret.data[0] = XMFLOAT2(cos(0.261799f) * data.Sensors[0], sin(0.261799f) * data.Sensors[0]);
+			ret.data[1] = XMFLOAT2(cos(-0.261799f) * data.Sensors[1], sin(-0.261799f) * data.Sensors[1]);
+		}
 	}
 
 	while (till > Utilities::GetTime());
@@ -76,7 +80,8 @@ void RemoteRobot::Update()
 void RemoteRobot::Update(Action newAction)
 {
 	Lock lock(mutex);
-	port.Write(InputFromAction(newAction));
+	if (port.IsOpen())
+		port.Write(InputFromAction(newAction));
 	Update();
 	action = newAction;
 }
