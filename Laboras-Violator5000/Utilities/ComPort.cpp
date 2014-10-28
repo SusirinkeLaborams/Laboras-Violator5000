@@ -20,9 +20,9 @@ void ComPort::Open()
 		name.c_str(),
 		GENERIC_READ | GENERIC_WRITE,
 		0,
-		0,
+		NULL,
 		OPEN_EXISTING,
-		0,
+		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_NO_BUFFERING,
 		NULL);
 
 	open = (handle != INVALID_HANDLE_VALUE);
