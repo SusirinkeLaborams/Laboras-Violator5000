@@ -12,11 +12,11 @@ private:
 	DirectX::XMFLOAT3 m_Position;
 	DirectX::XMFLOAT3 m_Rotation;
 
-	ComPtr<ID3D11InputLayout> m_InputLayout;
-	ComPtr<ID3D11VertexShader> m_VertexShader;
-	ComPtr<ID3D11PixelShader> m_PixelShader;
-	ComPtr<ID3D11Buffer> m_VertexBuffer;
-	ComPtr<ID3D11Buffer> m_ConstantBuffer;
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_InputLayout;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_VertexShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_PixelShader;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> m_VertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> m_ConstantBuffer;
 
 	UINT m_VertexStride;
 	UINT m_VertexCount;

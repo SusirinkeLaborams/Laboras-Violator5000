@@ -1,5 +1,5 @@
 #pragma once
-#include "IncomingData.h"
+
 #include "ReceiverImpl.h"
 #include "Utilities\CriticalSection.h"
 

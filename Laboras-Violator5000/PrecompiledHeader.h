@@ -12,7 +12,7 @@
 #include <vector>
 #include <thread>
 
-using namespace Microsoft::WRL;
+#include "..\Violator500\RobotIO.h"
 
 #if _DEBUG
 #define Assert(x) do { if (!(x) && IsDebuggerPresent()) { __debugbreak(); } } while(false)

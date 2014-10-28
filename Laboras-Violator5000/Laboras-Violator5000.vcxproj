@@ -103,7 +103,6 @@
     <ClCompile Include="Graphics\Environment.cpp" />
     <ClCompile Include="Graphics\OrthographicCamera.cpp" />
     <ClCompile Include="Graphics\Tank.cpp" />
-    <ClCompile Include="RobotInterface\Interface.cpp" />
     <ClCompile Include="RobotInterface\Map.cpp" />
     <ClCompile Include="RobotInterface\MockRobot.cpp" />
     <ClCompile Include="Robotinterface\RemoteRobot.cpp" />
@@ -111,6 +110,7 @@
     <ClCompile Include="Utilities\Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Violator500\RobotIO.h" />
     <ClInclude Include="Core\GameLoop.h" />
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\NonCopyable.h" />
@@ -121,8 +121,6 @@
     <ClInclude Include="Graphics\OrthographicCamera.h" />
     <ClInclude Include="Graphics\Tank.h" />
     <ClInclude Include="PrecompiledHeader.h" />
-    <ClInclude Include="RobotInterface\IncomingData.h" />
-    <ClInclude Include="RobotInterface\Interface.h" />
     <ClInclude Include="RobotInterface\Map.h" />
     <ClInclude Include="RobotInterface\MockRobot.h" />
     <ClInclude Include="RobotInterface\ReceiverImpl.h" />

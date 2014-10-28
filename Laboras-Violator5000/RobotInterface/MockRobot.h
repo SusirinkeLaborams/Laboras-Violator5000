@@ -1,7 +1,6 @@
 #pragma once
 #include "RobotBase.h"
 #include "ReceiverImpl.h"
-#include "IncomingData.h"
 #include "Map.h"
 
 class MockRobot : public RobotBase<MockRobot>

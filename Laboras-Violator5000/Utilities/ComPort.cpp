@@ -5,7 +5,6 @@ ComPort::ComPort(std::string name)
 	:name(name)
 {
 	Open();
-	bytesToRead = sizeof(uint8_t) * SensorCount;
 }
 
 

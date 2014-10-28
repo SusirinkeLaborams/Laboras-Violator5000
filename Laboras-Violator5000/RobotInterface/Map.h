@@ -1,6 +1,7 @@
 #pragma once
-#include "IncomingData.h"
+
 #include "Core\NonCopyable.h"
+
 class Map : NonCopyable
 {
 public:

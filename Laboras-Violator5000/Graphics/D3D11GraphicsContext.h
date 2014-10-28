@@ -8,12 +8,12 @@ class D3D11GraphicsContext : NonCopyable
 private:
 	static D3D11GraphicsContext* s_Instance;
 
-	ComPtr<ID3D11Device> m_Device;
-	ComPtr<ID3D11DeviceContext> m_DeviceContext;
-	ComPtr<IDXGISwapChain> m_SwapChain;
-	ComPtr<ID3D11RenderTargetView> m_RenderTargetView;
-	ComPtr<ID3D11RasterizerState> m_RasterizerState;
-	ComPtr<ID3D11BlendState> m_BlendState;
+	Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_RenderTargetView;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_RasterizerState;
+	Microsoft::WRL::ComPtr<ID3D11BlendState> m_BlendState;
 
 	D3D_FEATURE_LEVEL CreateDevice();
 	void CreateSwapChain(const Window& window, IDXGIFactory* dxgiFactory, const DXGI_MODE_DESC& displayMode);
