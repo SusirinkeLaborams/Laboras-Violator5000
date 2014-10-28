@@ -98,7 +98,7 @@ void ComPort::ReadWorker()
 		{
 			uint8_t byte = 0;
 
-			if (!ReadFileWithTimeout(m_Handle, &byte, 1))
+			if (!ReadFileWithTimeout(m_Handle, &byte, sizeof(byte)))
 			{
 				continue;
 			}
