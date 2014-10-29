@@ -18,7 +18,7 @@ public:
 struct RobotOutput 
 {
 public:
-	static const uint32_t MagicBytes = 2564348594;
+	static const uint32_t MagicBytes = 0x11111111;
 	uint32_t Magic;
 	uint32_t Hash;
 	uint32_t Sensors[kSensorCount];
@@ -34,6 +34,7 @@ public:
 	}
 };
 
+#if !ARDUINO
 struct IncomingData
 {
 public:
@@ -41,3 +42,4 @@ public:
 	float robotRotation;
 	DirectX::XMFLOAT2 data[kSensorCount];
 };
+#endif

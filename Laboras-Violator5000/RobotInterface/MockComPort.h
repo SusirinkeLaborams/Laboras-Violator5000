@@ -15,5 +15,5 @@ public:
 	MockComPort(const RemoteRobot& robot);
 
 	void Write(const RobotInput& data);
-	RobotOutput Read();
+	bool Read(RobotOutput& robotOutput);
 };

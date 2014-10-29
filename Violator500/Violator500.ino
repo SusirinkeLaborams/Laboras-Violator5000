@@ -72,26 +72,32 @@ void setup()
 
 void loop()
 {
-	RobotOutput o;
-	o.Magic = RobotOutput::MagicBytes;
-	o.Sensors[0] = Sensors[0].GetDistance();
-	o.Sensors[1] = Sensors[1].GetDistance();
-	o.Hash = RobotOutput::CalculateHash(o);
-
-	Serial.write((char*)&o, sizeof(o));
-}
-
-void serialEvent()
-{
-	if (Serial.available())
+	if (millis() % 90 == 0)
 	{
-		RobotInput input;
-		Serial.readBytes((char*) &input, 1);
-		
-		Engines[0].SetDirection(input.DirectionL);
-		Engines[0].SetSpeed(input.PowerL * 36);
-		Engines[1].SetDirection(input.DirectionR);
-		Engines[1].SetSpeed(input.PowerR * 36);
+		RobotOutput o;
+		o.Magic = RobotOutput::MagicBytes;
+		o.Sensors[0] = 20;// Sensors[0].GetDistance();
+		o.Sensors[1] = 20;// Sensors[1].GetDistance();
+		o.Hash = RobotOutput::CalculateHash(o);
+		Serial.write((char*)&o, 16);
+		delay(1);
+	}
+	int count = Serial.available();
+	if (count)
+	{
+		RobotInput input[64];
+		count = Serial.readBytes((char*)&input, count);
+
+		if (count > 0)
+		{
+			count--;
+
+			Engines[0].SetDirection(input[count].DirectionL);
+			Engines[0].SetSpeed(input[count].PowerL * 36);
+			Engines[1].SetDirection(input[count].DirectionR);
+			Engines[1].SetSpeed(input[count].PowerR * 36);
+		}
 	}
 }
+
 

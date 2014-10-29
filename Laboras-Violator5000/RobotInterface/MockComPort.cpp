@@ -21,11 +21,10 @@ static float GetDistance(const DirectX::XMFLOAT2& left, const DirectX::XMFLOAT2&
 	return sqrt(deltaX * deltaX + deltaY * deltaY);
 }
 
-RobotOutput MockComPort::Read()
+bool MockComPort::Read(RobotOutput& robotOutput)
 {
 	using namespace DirectX;
 
-	RobotOutput robotOutput;
 	XMFLOAT2 collisions[2];
 	auto endOfBusyWait = Utilities::GetTime() + 0.0016;
 
@@ -61,6 +60,5 @@ RobotOutput MockComPort::Read()
 	robotOutput.Hash = RobotOutput::CalculateHash(robotOutput);
 
 	while (endOfBusyWait > Utilities::GetTime());
-
-	return robotOutput;
+	return true;
 }
